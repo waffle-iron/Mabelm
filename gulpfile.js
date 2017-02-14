@@ -13,6 +13,7 @@ gulp.task('buildElm', function (cb) {
 		console.log(stdout);
 		console.log(stderr);
 		cb(err);
+		browserSync.reload();
 	});
 })
 

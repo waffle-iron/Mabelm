@@ -13,7 +13,6 @@ model =
     , isUpdating = False
     }
 
-
 type GameObject
     = GameModel GameObjectData
     | GameSystem GameObjectData

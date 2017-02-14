@@ -19,3 +19,11 @@ update msg model =
             ({model
                 | isCompiling = False
             }, Cmd.none)
+        ToggleButtonRender ->
+            ({model
+                | isRendering = not model.isRendering
+            }, Cmd.none)
+        ToggleButtonUpdate ->
+            ({model
+                | isUpdating = not model.isUpdating
+            }, Cmd.none)

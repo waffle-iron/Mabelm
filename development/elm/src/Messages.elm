@@ -4,3 +4,5 @@ type Msg
     = NoOp
     | CompileGame
     | CompileCompleted String
+    | ToggleButtonRender
+    | ToggleButtonUpdate

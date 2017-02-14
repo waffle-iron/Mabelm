@@ -2,6 +2,9 @@ $baseColor: #008080;
 
 $toolbarWidth: 90px;
 
+$toolbar__buttonWidth: $toolbarWidth;
+$toolbar__buttonHeight: $toolbarWidth;
+
 $boxShadow: 9px 0px 49px -15px rgba(0,0,0,0.22);
 
 // darken($color, $amount)
@@ -15,7 +18,7 @@ body, html {
 	background-color: darken($baseColor, 20);
 }
 
-#toolbar {
+.toolbar {
 	top: 0;
 	left: 0;
 	position: absolute;
@@ -37,6 +40,9 @@ body, html {
 	z-index: 1;
 }
 
-.toolbar_button {
-	border: 1px solid #ccc;
+.toolbar__button {
+	width: $toolbar__buttonWidth;
+	height: $toolbar__buttonHeight;
+	background-color: darken($baseColor, 19);
+	border-bottom: 2px solid darken($baseColor, 20);
 }

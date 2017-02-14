@@ -2,9 +2,7 @@ module View.View exposing (..)
 
 import Html exposing (Html, text, div, ul, li, span)
 import Html.Attributes exposing (class, id)
-import Material.Icons.Action exposing (account_balance)
-import Color exposing (Color)
-import Svg exposing (Svg)
+
 
 import Messages exposing (Msg(..))
 import Model exposing (Model)
@@ -18,17 +16,22 @@ view model =
 
 toolbar : Model -> Html Msg
 toolbar model =
-    div [ id "toolbar" ]
-        [ span [ class "toolbar_button" ]
-            [ toolbarButton model
-            ]
+    div [ class "toolbar" ]
+        [ toolbar__button model
+        , toolbar__button model
+        , toolbar__button model
         ]
+
+toolbar__button : Model -> Html Msg
+toolbar__button model =
+    div [ class "toolbar__button" ]
+        [
+        ]
+
+
+
 
 gameWindow : Model -> Html Msg
 gameWindow model =
     div [ id "gameWindow" ]
         []
-
-toolbarButton : Model -> Svg Msg
-toolbarButton model =
-    account_balance Color.charcoal 60

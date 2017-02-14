@@ -25,7 +25,6 @@ gulp.task('serve', function() {
     gulp.watch("./development/elm/src/**/*.elm", ['buildElm']);
     gulp.watch("./development/scss/**/*.scss", ['sass']);
     gulp.watch("public/*.html").on('change', browserSync.reload);
-    gulp.watch("public/js/*.js").on('change', browserSync.reload);
 });
 
 function swollow(error) {

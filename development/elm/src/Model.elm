@@ -4,6 +4,9 @@ type alias Model =
     { isCompiling :Bool
     , isRendering :Bool
     , isUpdating :Bool
+    , systemPackages :Maybe (List SystemPackage)
+    , modelPackages :Maybe (List ModelPackage)
+    , spritePackages :Maybe (List SpritePackage)
     }
 
 model : Model
@@ -11,45 +14,66 @@ model =
     { isCompiling = False
     , isRendering = False
     , isUpdating = False
+    , systemPackages = Nothing
+    , modelPackages = Nothing
+    , spritePackages = Nothing
     }
 
-type GameObject
-    = GameModel GameObjectData
-    | GameSystem GameObjectData
-    | GameSprite GameObjectData
+type alias GameModel = GameObjectData
+type alias GameSystem = GameObjectData
+type alias GameSprite = GameObjectData
+--
+type alias SystemPackage =
+    { gameSystems :Maybe List GameSystem
+    , subPackages :Maybe List SystemPackageChild
+    }
+type SystemPackageChild = SystemPackageChild SystemPackage
+--
+type alias ModelPackage =
+    { gameModels :Maybe List GameModel
+    , subPackages :Maybe List ModelPackageChild
+    }
+type ModelPackageChild = ModelPackageChild ModelPackage
+--
+type alias SpritePackage =
+    { gameSprites :Maybe List GameSprite
+    , subPackages :Maybe List SpritePackageChild
+    }
+type SpritePackageChild = SpritePackageChild SpritePackage
+--
 
 type alias FieldString =
     { name :String
     , value :String
     }
-
+--
 type alias FieldFloat =
     { name :String
     , value :Float
     }
-
+--
 type alias FieldInt =
     { name :String
     , value :Int
     }
-
+--
 type alias FieldBool =
     { name :String
     , value :Bool
     }
-
+--
 type Asset
     = Image FieldAsset
     | Sound FieldAsset
     | Blob FieldAsset
     | Font FieldAsset
     | Video FieldAsset
-
+--
 type alias FieldAsset =
     { name :String
     , path :String
     }
-
+--
 type alias GameObjectData =
     { name :String
     , package :String

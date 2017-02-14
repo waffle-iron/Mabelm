@@ -2,6 +2,7 @@ module View.View exposing (..)
 
 import Html exposing (Html, text, div, ul, li, span)
 import Html.Attributes exposing (class, id)
+import Material.Icons.Action exposing (account_balance)
 
 
 import Messages exposing (Msg(..))

@@ -2,27 +2,33 @@ module View.View exposing (..)
 
 import Html exposing (Html, text, div, ul, li, span)
 import Html.Attributes exposing (class, id)
-import Html.Events exposing (onClick)
+import Material.Icons.Action exposing (account_balance)
+import Color exposing (Color)
+import Svg exposing (Svg)
 
 import Messages exposing (Msg(..))
 import Model exposing (Model)
 
 view : Model -> Html Msg
 view model =
-    div [ class "clearfix" ]
-        [ viewHeader model
+    div []
+        [ toolbar model
+        , gameWindow model
         ]
 
-
-viewHeader : Model -> Html Msg
-viewHeader model =
-    div [ class "col col-12 border" ]
-        [ compileButton model
+toolbar : Model -> Html Msg
+toolbar model =
+    div [ id "toolbar" ]
+        [ span [ class "toolbar_button" ]
+            [ toolbarButton model
+            ]
         ]
 
-compileButton : Model -> Html Msg
-compileButton model =
-    if model.isCompiling then
-        span [ class "inline-block p1 border" ] [ text "compiling right now" ]
-    else
-        span [ class "inline-block p1 border", onClick CompileGame ] [ text "start compile" ]
+gameWindow : Model -> Html Msg
+gameWindow model =
+    div [ id "gameWindow" ]
+        []
+
+toolbarButton : Model -> Svg Msg
+toolbarButton model =
+    account_balance Color.charcoal 60

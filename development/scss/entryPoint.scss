@@ -1,26 +1,42 @@
+$baseColor: #008080;
+
+$toolbarWidth: 90px;
+
+$boxShadow: 9px 0px 49px -15px rgba(0,0,0,0.22);
+
+// darken($color, $amount)
+// lighten($color, $amount)
+// desaturate($color, $amount)
+
 body, html {
-	width: 100%;
-	height: 100%;
+	width: 100vw;
+	height: 100vh;
 	overflow: hidden;
-	background: #000;
-	color: #ccc;
+	background-color: darken($baseColor, 20);
 }
 
-#embeddedGame {
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
-	position: absolute;
+#toolbar {
 	top: 0;
 	left: 0;
-	z-index: 0;
+	position: absolute;
+	background-color: darken($baseColor, 19);
+	width: $toolbarWidth;
+	height: 100vh;
+	box-shadow: $boxShadow;
+	z-index: 2;
 }
 
-#gui {
+#gameWindow {
+	top: 0;
+	left: $toolbarWidth;
 	position: absolute;
-	top: 0px;
-	left: 0px;
+	background-color: darken($baseColor, 20);
+	width: $toolbarWidth;
+	height: 100vh;
+	width: calc(100vw - #{$toolbarWidth});
 	z-index: 1;
-	width: 100%;
-	// min-height: 100%;
+}
+
+.toolbar_button {
+	border: 1px solid #ccc;
 }

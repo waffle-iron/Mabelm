@@ -28,6 +28,16 @@ body, html {
 	z-index: 2;
 }
 
+#gameSystemObjects {
+	top: 0;
+	right: 0;
+	position: absolute;
+	background-color: desaturate(lighten($baseColor, 20), 95);
+	width: 200px;
+	height: 100vh;
+	z-index: 2;
+}
+
 #gameWindow {
 	top: 0;
 	left: $toolbarWidth;

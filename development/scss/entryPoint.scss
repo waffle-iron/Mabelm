@@ -43,18 +43,26 @@ body, html {
 }
 
 .toolbar__button {
+	position: relative;
 	width: $toolbar__buttonWidth;
 	height: $toolbar__buttonHeight;
 	background-color: darken($baseColor, 18);
 	border-bottom: $toolbar__buttonStroke solid darken($baseColor, 20);
 	transition: $transitionAttr;
 	box-sizing: content-box;
-}
 
-.toolbar__button:hover {
-	background-color: darken($baseColor, 17.5);
-}
+	svg {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+	}
 
-.toolbar__button:active {
-	background-color: darken($baseColor, 18.5);
+	&:hover {
+		background-color: darken($baseColor, 17.5);
+	}
+
+	&:active {
+		background-color: darken($baseColor, 18.5);
+	}
 }

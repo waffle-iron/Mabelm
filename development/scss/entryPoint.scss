@@ -6,7 +6,7 @@ $toolbar__buttonWidth: $toolbarWidth;
 $toolbar__buttonHeight: $toolbarWidth;
 $boxShadow: 9px 0px 49px -15px rgba(0,0,0,0.22);
 
-$transitionAttr: all 0.1s ease-in;
+$transitionAttr: all 2.1s ease-in;
 
 $toolbar__buttonStroke: 3px;
 
@@ -62,4 +62,25 @@ body, html {
 	&:active {
 		background-color: darken($baseColor, 18.5);
 	}
+
+	svg {
+		transition: $transitionAttr;
+	}
+
+	&.compile {
+		&.isCompiling {
+			svg {
+				animation: rotating 2s linear infinite;
+			}
+		}
+	}
+}
+
+@keyframes rotating {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }

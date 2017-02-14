@@ -3,7 +3,7 @@ port module Update.Update exposing (update)
 import Messages exposing (Msg(..))
 import Model as Model exposing (Model)
 
-port yeah : String -> Cmd msg
+port startCompile : String -> Cmd msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -14,7 +14,7 @@ update msg model =
         CompileGame ->
             ({model
                 | isCompiling = True
-            }, yeah "game")
+            }, startCompile "")
         CompileCompleted str ->
             ({model
                 | isCompiling = False

@@ -1,0 +1,8 @@
+node_modules
+build
+elm-stuff
+public
+
+*.DS_Store
+.AppleDouble
+.LSOverride

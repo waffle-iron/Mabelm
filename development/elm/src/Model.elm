@@ -1,12 +1,10 @@
-module Model exposing (..)
+module Model exposing (Model, model, GameObject, GameObjectChildren(GameObjectChildren))
 
 type alias Model =
     { isCompiling :Bool
     , isRendering :Bool
     , isUpdating :Bool
-    , systemPackages :Maybe (List SystemPackage)
-    , modelPackages :Maybe (List ModelPackage)
-    , spritePackages :Maybe (List SpritePackage)
+    , gameObjects :Maybe (List GameObject)
     }
 
 model : Model
@@ -14,92 +12,48 @@ model =
     { isCompiling = False
     , isRendering = False
     , isUpdating = False
-    , systemPackages = Nothing
-    , modelPackages = Nothing
-    , spritePackages = Nothing
+    , gameObjects = Just 
+        [ baseObject
+        , nextObject
+        ]
     }
 
-type alias GameModel = GameObjectData
-type alias GameSystem = GameObjectData
-type alias GameSprite = GameObjectData
---
-type alias SystemPackage =
-    { gameSystems :Maybe List GameSystem
-    , subPackages :Maybe List SystemPackageChild
-    }
-type SystemPackageChild = SystemPackageChild SystemPackage
---
-type alias ModelPackage =
-    { gameModels :Maybe List GameModel
-    , subPackages :Maybe List ModelPackageChild
-    }
-type ModelPackageChild = ModelPackageChild ModelPackage
---
-type alias SpritePackage =
-    { gameSprites :Maybe List GameSprite
-    , subPackages :Maybe List SpritePackageChild
-    }
-type SpritePackageChild = SpritePackageChild SpritePackage
---
-
-type alias FieldString =
-    { name :String
-    , value :String
-    }
---
-type alias FieldFloat =
-    { name :String
-    , value :Float
-    }
---
-type alias FieldInt =
-    { name :String
-    , value :Int
-    }
---
-type alias FieldBool =
-    { name :String
-    , value :Bool
-    }
---
-type Asset
-    = Image FieldAsset
-    | Sound FieldAsset
-    | Blob FieldAsset
-    | Font FieldAsset
-    | Video FieldAsset
---
-type alias FieldAsset =
+type alias GameObject =
     { name :String
     , path :String
-    }
---
-type alias GameObjectData =
-    { name :String
-    , package :String
-    , stringFields :Maybe List FieldString
-    , floatFields :Maybe List FieldFloat
-    , intFields :Maybe List FieldInt
-    , boolFields :Maybe List FieldBool
-    , assets :Maybe List Asset
+    , children :Maybe GameObjectChildren
     }
 
+type GameObjectChildren = GameObjectChildren (List GameObject)
 
 
+baseObject : GameObject
+baseObject =
+    { name = "SystemFlipBook"
+    , path = "cranberry.system"
+    , children = Nothing
+    }
 
+nextObject : GameObject
+nextObject =
+    { name = "ModelFlipBook"
+    , path = "cranberry.model"
+    , children = Just (GameObjectChildren 
+        [ modelChildObj
+        , modelChildObj2
+        ])
+    }
 
---------------------------
--- fields Assets
---------------------------
--- Image
--- Sound
--- Blob
--- Font
--- Video
---------------------------
--- fields Primitive
---------------------------
--- String
--- Float
--- Int
--- Bool
+modelChildObj : GameObject
+modelChildObj =
+    { name = "ChildModelFlipBook"
+    , path = "cranberry.model.child"
+    , children = Nothing
+    }
+
+modelChildObj2 : GameObject
+modelChildObj2 =
+    { name = "ChildModelFlipBook2"
+    , path = "cranberry.model.child"
+    , children = Nothing
+    }

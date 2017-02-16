@@ -10,22 +10,21 @@ gulp.task('buildElm', function (cb) {
 	var moveFile = 'mv elm.js ../../public/js/'
 
 	exec(gotoElmDir + and + makeElmJS + and + moveFile, function (err, stdout, stderr) {
-		console.log(stdout);
-		console.log(stderr);
 		cb(err);
-		browserSync.reload();
 	});
 })
 
 gulp.task('serve', function() {
 
     browserSync.init({
-        server: "./public"
+        server: "./public",
+		notify: false
     });
 
     gulp.watch("./development/elm/src/**/*.elm", ['buildElm']);
     gulp.watch("./development/scss/**/*.scss", ['sass']);
     gulp.watch("public/*.html").on('change', browserSync.reload);
+    gulp.watch("public/js/*.js").on('change', browserSync.reload);
 });
 
 function swollow(error) {

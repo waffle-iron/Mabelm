@@ -1,7 +1,7 @@
 module View.View exposing (..)
 
 import Html exposing (Html, div, h3, h4, text)
-import Html.Attributes exposing (id)
+import Html.Attributes exposing (id, class)
 
 import Messages exposing (Msg(..))
 import Model exposing (Model, GameObject, GameObjectChildren(GameObjectChildren))
@@ -29,20 +29,18 @@ gameSystemObjects model =
 
 displayGameObject : GameObject -> Html Msg
 displayGameObject obj =
-    div []
+    let dChildren = case obj.children of
+        Nothing -> 
+            text ""
+        Just children -> drawChildren children in
+
+    div [ class "gameObject" ]
         [ h4 [] [ text obj.name ]
         , text obj.path
-        , div [] (drawChildren obj.children)
+        , dChildren
         ]
 
-drawChildren : (Maybe GameObjectChildren) -> List (Html Msg)
-drawChildren maybeChildren =
-    case maybeChildren of
-        Nothing ->
-            [text ""]
-        Just (children) ->
-            (List.map displayGameObject (extractChildren children))
-
-extractChildren : GameObjectChildren -> (List GameObject)
-extractChildren (GameObjectChildren children) =
-    children
+drawChildren : GameObjectChildren -> Html Msg
+drawChildren (GameObjectChildren children) =
+    div [ class "gameObjectChildren" ]
+        (List.map displayGameObject children)

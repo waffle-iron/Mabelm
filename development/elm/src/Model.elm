@@ -1,4 +1,4 @@
-module Model exposing (Model, model, GameObject, GameObjectChildren(GameObjectChildren))
+module Model exposing (Model, model, GameObject)
 
 type alias Model =
     { isCompiling :Bool
@@ -13,52 +13,46 @@ model =
     , isRendering = False
     , isUpdating = False
     , gameObjects = Just 
-        [ baseObject
-        , nextObject
+        [ obj1
+        , obj2
+        , obj3
+        , obj4
+        , obj5
         ]
     }
 
 type alias GameObject =
     { name :String
     , path :String
-    , displayChildren :Bool
-    , children :Maybe GameObjectChildren
     }
 
-type GameObjectChildren = GameObjectChildren (List GameObject)
 
-
-baseObject : GameObject
-baseObject =
-    { name = "SystemFlipBook"
-    , path = "cranberry.system"
-    , displayChildren = True
-    , children = Nothing
+obj1 : GameObject
+obj1 =
+    { name = "ModFlipBook"
+    , path = "cranberry.model"
     }
 
-nextObject : GameObject
-nextObject =
+obj2 : GameObject
+obj2 =
     { name = "ModelFlipBook"
     , path = "cranberry.model"
-    , displayChildren = True
-    , children = Just (GameObjectChildren 
-        [ modelChildObj
-        , modelChildObj2
-        ])
     }
 
-modelChildObj : GameObject
-modelChildObj =
+obj3 : GameObject
+obj3 =
     { name = "ChildModelFlipBook"
     , path = "cranberry.model.child"
-    , displayChildren = True
-    , children = Nothing
     }
 
-modelChildObj2 : GameObject
-modelChildObj2 =
+obj4 : GameObject
+obj4 =
     { name = "ChildModelFlipBook2"
+    , path = "cranberry.model.child.ham"
+    }
+
+obj5 : GameObject
+obj5 =
+    { name = "ChildModelFlipBook3"
     , path = "cranberry.model.child"
-    , displayChildren = True
-    , children = Nothing
     }

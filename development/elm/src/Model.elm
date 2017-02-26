@@ -1,10 +1,10 @@
-module Model exposing (Model, model, GameObject)
+module Model exposing (Model, model, GameObject, GameObjectList)
 
 type alias Model =
     { isCompiling :Bool
     , isRendering :Bool
     , isUpdating :Bool
-    , gameObjects :Maybe (List GameObject)
+    , gameObjects :Maybe (List GameObjectList)
     }
 
 model : Model
@@ -12,47 +12,16 @@ model =
     { isCompiling = False
     , isRendering = False
     , isUpdating = False
-    , gameObjects = Just 
-        [ obj1
-        , obj2
-        , obj3
-        , obj4
-        , obj5
-        ]
+    , gameObjects = Nothing
+    }
+
+type alias GameObjectList =
+    { objects :List GameObject
+    , path :String
+    , isVisible :Bool
     }
 
 type alias GameObject =
     { name :String
     , path :String
-    }
-
-
-obj1 : GameObject
-obj1 =
-    { name = "ModFlipBook"
-    , path = "cranberry.model"
-    }
-
-obj2 : GameObject
-obj2 =
-    { name = "ModelFlipBook"
-    , path = "cranberry.model"
-    }
-
-obj3 : GameObject
-obj3 =
-    { name = "ChildModelFlipBook"
-    , path = "cranberry.model.child"
-    }
-
-obj4 : GameObject
-obj4 =
-    { name = "ChildModelFlipBook2"
-    , path = "cranberry.model.child.ham"
-    }
-
-obj5 : GameObject
-obj5 =
-    { name = "ChildModelFlipBook3"
-    , path = "cranberry.model.child"
     }

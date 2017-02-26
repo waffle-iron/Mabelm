@@ -1,12 +1,10 @@
 module View.View exposing (..)
 
-import Html exposing (Html, div, h3, h4, text)
+import Html exposing (Html, div, h2, h3, h4, text, span)
 import Html.Attributes exposing (id, class)
 
-import List.Extra as ListExtra
-
 import Messages exposing (Msg(..))
-import Model exposing (Model, GameObject)
+import Model exposing (Model, GameObject, GameObjectList)
 import View.Toolbar.ViewToolbar exposing (toolbar)
 import View.GameWindow.ViewGameWindow exposing (gameWindow)
 
@@ -24,29 +22,20 @@ gameSystemObjects model =
         Nothing ->
             text ""
         Just objects ->
-            let listPathLists = groupListsByPackage objects in
-
             div [ id "gameSystemObjects" ]
-                [ h3 [] [ text "Objects" ]
-                , div [] (List.map displayList listPathLists)
+                [ h2 [] [ text "Objects" ]
+                , div [] (List.map displayList objects)
                 ]
 
-displayList : List GameObject -> Html Msg
+displayList : GameObjectList -> Html Msg
 displayList list =
-    div [ class "gameObjectChildren" ] (List.map displayGameObject list)
+    div [ class "gameObjectChildren" ]
+        [ span [] [ text list.path]
+        , div [] (List.map displayGameObject list.objects)
+        ]
 
 displayGameObject : GameObject -> Html Msg
 displayGameObject obj =
     div [ class "gameObject" ]
         [ h4 [] [ text obj.name ]
-        , text obj.path
         ]
-
-groupListsByPackage : List GameObject -> List (List GameObject)
-groupListsByPackage list =
-    let sortedList = sortList list in 
-    ListExtra.groupWhile (\x y -> x.path == y.path) sortedList
-
-sortList : List GameObject -> List GameObject
-sortList list =
-    List.sortBy .path list

@@ -17,4 +17,6 @@ type Msg
     | DecrementFloat FieldFloat GameObject
     | ToggleBool FieldBool GameObject
     | UpdateStr FieldString GameObject String
+    | UpdateInt FieldInteger GameObject String
+    | UpdateFloat FieldFloat GameObject String
     | BuildObject GameObject

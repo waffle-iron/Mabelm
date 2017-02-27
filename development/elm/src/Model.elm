@@ -57,3 +57,8 @@ type alias FieldBool =
     { pName :String
     , pValue :Maybe Bool
     }
+
+type alias Field a =
+    { pName :String
+    , pValue :Maybe a
+    }

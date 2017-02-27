@@ -102,16 +102,24 @@ update msg model =
                 | systemPackages = DataUpdater.updateGameObject nObj model.systemPackages
             }, Cmd.none)
         ------------------------------------------------------------
+        UpdateInt fieldInt obj str ->
+            let 
+                nObj = (changeFieldInt fieldInt str obj)
+            in
+            ({model
+                | systemPackages = DataUpdater.updateGameObject nObj model.systemPackages
+            }, Cmd.none)
+        ------------------------------------------------------------
+        UpdateFloat fieldFloat obj str ->
+            let 
+                nObj = (changeFieldFloat fieldFloat str obj)
+            in
+            ({model
+                | systemPackages = DataUpdater.updateGameObject nObj model.systemPackages
+            }, Cmd.none)
+        ------------------------------------------------------------
         BuildObject obj ->
             (model, (addModel (Encoder.objToValue obj)))
-
-
-
-
-
-
-
-
 
 
 
@@ -124,7 +132,7 @@ incrementDecrementObjInt fieldInt obj operation =
             Just val -> val
         nFieldInt = {fieldInt | pValue = Just(operation val 1)}
         variables = obj.variables
-        nVariables = {variables | integers = updateFieldInt nFieldInt obj.variables.integers}
+        nVariables = {variables | integers = updateField nFieldInt obj.variables.integers}
     in
         { obj | variables = nVariables }
 
@@ -136,7 +144,7 @@ incrementDecrementObjFloat fieldFloat obj operation =
             Just val -> val
         nFieldFloat = {fieldFloat | pValue = Just(operation val 1)}
         variables = obj.variables
-        nVariables = {variables | floats = updateFieldFloat nFieldFloat obj.variables.floats}
+        nVariables = {variables | floats = updateField nFieldFloat obj.variables.floats}
     in
         { obj | variables = nVariables }
 
@@ -148,7 +156,7 @@ toggleObjBool fieldBool obj =
             Just val -> val
         nFieldBool = {fieldBool | pValue = Just(not val)}
         variables = obj.variables
-        nVariables = {variables | booleans = updateFieldBool nFieldBool obj.variables.booleans}
+        nVariables = {variables | booleans = updateField nFieldBool obj.variables.booleans}
     in
         { obj | variables = nVariables }
 
@@ -157,52 +165,41 @@ changeFieldString fieldString str obj =
     let 
         nFieldString = {fieldString | pValue = Just(str)}
         variables = obj.variables
-        nVariables = {variables | strings = updateFieldString nFieldString obj.variables.strings}
+        nVariables = {variables | strings = updateField nFieldString obj.variables.strings}
     in
         { obj | variables = nVariables }
 
+changeFieldInt : FieldInteger -> String -> GameObject -> GameObject
+changeFieldInt fieldInt str obj =
+    let 
+        val = case String.toInt str of
+            Ok v -> v
+            Err _ -> 0
+        nFieldInt = {fieldInt | pValue = Just(val)}
+        variables = obj.variables
+        nVariables = {variables | integers = updateField nFieldInt obj.variables.integers}
+    in
+        { obj | variables = nVariables }
 
+changeFieldFloat : FieldFloat -> String -> GameObject -> GameObject
+changeFieldFloat fieldFloat str obj =
+    let 
+        val = case String.toFloat str of
+            Ok v -> v
+            Err _ -> 0
+        nFieldFloat = {fieldFloat | pValue = Just(val)}
+        variables = obj.variables
+        nVariables = {variables | floats = updateField nFieldFloat obj.variables.floats}
+    in
+        { obj | variables = nVariables }
 
-
-
-
-
-updateFieldInt : FieldInteger -> Maybe (List FieldInteger) -> Maybe (List FieldInteger)
-updateFieldInt fieldInt maybeFields =
+updateField : Field a -> Maybe (List (Field a)) -> Maybe (List (Field a))
+updateField field maybeFields =
     case maybeFields of
         Nothing ->
             Nothing
         Just fields ->
-            Just(ListExtra.replaceIf (\l -> l.pName == fieldInt.pName) fieldInt fields)
-
-updateFieldFloat : FieldFloat -> Maybe (List FieldFloat) -> Maybe (List FieldFloat)
-updateFieldFloat fieldFloat maybeFields =
-    case maybeFields of
-        Nothing ->
-            Nothing
-        Just fields ->
-            Just(ListExtra.replaceIf (\l -> l.pName == fieldFloat.pName) fieldFloat fields)
-
-updateFieldBool : FieldBool -> Maybe (List FieldBool) -> Maybe (List FieldBool)
-updateFieldBool fieldBool maybeFields =
-    case maybeFields of
-        Nothing ->
-            Nothing
-        Just fields ->
-            Just(ListExtra.replaceIf (\l -> l.pName == fieldBool.pName) fieldBool fields)
-
-updateFieldString : FieldString -> Maybe (List FieldString) -> Maybe (List FieldString)
-updateFieldString fieldString maybeFields =
-    case maybeFields of
-        Nothing ->
-            Nothing
-        Just fields ->
-            Just(ListExtra.replaceIf (\l -> l.pName == fieldString.pName) fieldString fields)
-
-
-
-
-
+            Just(ListExtra.replaceIf (\l -> l.pName == field.pName) field fields)
 
 updateSystemPackages : GamePackage -> Maybe (List GamePackage) -> Maybe (List GamePackage)
 updateSystemPackages tappedList maybeSystemPackages =

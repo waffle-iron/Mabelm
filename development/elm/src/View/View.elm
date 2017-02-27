@@ -59,10 +59,6 @@ displayGameObjectField maybeFields displayFunc =
         Nothing -> text ""
         Just list -> div [] (List.map displayFunc list)
 
-
-
-
-
 displayGameObjectFieldString : GameObject -> FieldString -> Html Msg
 displayGameObjectFieldString obj field =
     div []
@@ -75,7 +71,7 @@ displayGameObjectFieldInteger obj field =
     div []
         [ span [] [ text (field.pName ++ ": ") ]
         , div []
-            [ input [ value (getValueString field.pValue) ] []
+            [ input [ value (getValueString field.pValue), onInput (UpdateInt field obj) ] []
             , button [ onClick (DecrementInt field obj) ] [ text "-" ]
             , button [ onClick (IncrementInt field obj) ] [ text "+" ]
             ]
@@ -86,7 +82,7 @@ displayGameObjectFieldFloat obj field =
     div []
         [ span [] [ text (field.pName ++ ": ") ]
         , div []
-            [ input [ value (getValueString field.pValue) ] []
+            [ input [ value (getValueString field.pValue), onInput (UpdateFloat field obj) ] []
             , button [ onClick (DecrementFloat field obj) ] [ text "-" ]
             , button [ onClick (IncrementFloat field obj) ] [ text "+" ]
             ]

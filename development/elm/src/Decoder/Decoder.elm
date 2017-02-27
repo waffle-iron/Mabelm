@@ -44,7 +44,7 @@ gameObjectDecoder =
         (Decode.field "path" Decode.string)
         (Decode.field "id" Decode.int)
         (Decode.field "variables" gameObjectAttrDecoder)
-        (Decode.oneOf [Decode.field "isActive" Decode.bool, Decode.succeed False])
+        (Decode.oneOf [Decode.field "isActive" Decode.bool, Decode.succeed True])
 --
 gameObjectAttrDecoder : Decode.Decoder GameObjectAttributes
 gameObjectAttrDecoder =
@@ -81,6 +81,3 @@ fieldFloatDecoder =
     Decode.map2 FieldFloat
         (Decode.field "pName" Decode.string)
         (Decode.field "pValue" (Decode.nullable Decode.float))
-
--- oneOf [ "z" := float, succeed 0 ]
---    , isActive :Bool

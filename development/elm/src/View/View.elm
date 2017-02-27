@@ -1,8 +1,9 @@
 module View.View exposing (..)
 
-import Html exposing (Html, div, h2, h3, h4, text, span)
-import Html.Attributes exposing (..)
+import Html exposing (Html, div, h2, h3, h4, text, span, form, input, button, select, option)
+import Html.Attributes exposing (id, class, disabled, placeholder, type_, checked)
 import Html.Events exposing (onClick)
+import String.Extra as StringExtra
 
 import Messages exposing (Msg(..))
 import Model exposing (..)
@@ -57,38 +58,55 @@ displayGameObjectField maybeFields displayFunc =
         Nothing -> text ""
         Just list -> div [] (List.map displayFunc list)
 
+
+
+
+
+
+
+
 displayGameObjectFieldString : FieldString -> Html Msg
 displayGameObjectFieldString obj =
     div []
         [ span [] [ text (obj.pName ++ ": ") ]
-        , case obj.pValue of
-            Nothing -> span [] [ text "" ]
-            Just val -> span [] [ text val ]
+        , input [ placeholder (getValueString obj.pValue) ] []
         ]
 
 displayGameObjectFieldInteger : FieldInteger -> Html Msg
 displayGameObjectFieldInteger obj =
     div []
         [ span [] [ text (obj.pName ++ ": ") ]
-        , case obj.pValue of
-            Nothing -> span [] [ text "" ]
-            Just val -> span [] [ text (toString val) ]
+        , div []
+            [ input [ placeholder (getValueString obj.pValue) ] []
+            , button [] [ text "-" ]
+            , button [] [ text "+" ]
+            ]
         ]
 
 displayGameObjectFieldFloat : FieldFloat -> Html Msg
 displayGameObjectFieldFloat obj =
     div []
         [ span [] [ text (obj.pName ++ ": ") ]
-        , case obj.pValue of
-            Nothing -> span [] [ text "" ]
-            Just val -> span [] [ text (toString val) ]
+        , div []
+            [ input [ placeholder (getValueString obj.pValue) ] []
+            , button [] [ text "-" ]
+            , button [] [ text "+" ]
+            ]
         ]
 
 displayGameObjectFieldBool : FieldBool -> Html Msg
 displayGameObjectFieldBool obj =
+    let checkedVal = case obj.pValue of
+        Nothing -> False
+        Just val -> val
+    in
     div []
         [ span [] [ text (obj.pName ++ ": ") ]
-        , case obj.pValue of
-            Nothing -> span [] [ text "" ]
-            Just val -> span [] [ text (toString val) ]
+        , input [ type_ "checkbox", checked checkedVal ] []
         ]
+
+getValueString : Maybe a -> String
+getValueString maybeVal =
+    case maybeVal of
+        Nothing -> ""
+        Just val -> StringExtra.unquote (toString val)

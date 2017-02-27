@@ -94,6 +94,14 @@ update msg model =
                 | systemPackages = DataUpdater.updateGameObject nObj model.systemPackages
             }, Cmd.none)
         ------------------------------------------------------------
+        UpdateStr fieldString obj str ->
+            let 
+                nObj = (changeFieldString fieldString str obj)
+            in
+            ({model
+                | systemPackages = DataUpdater.updateGameObject nObj model.systemPackages
+            }, Cmd.none)
+        ------------------------------------------------------------
         BuildObject obj ->
             (model, (addModel (Encoder.objToValue obj)))
 
@@ -144,6 +152,15 @@ toggleObjBool fieldBool obj =
     in
         { obj | variables = nVariables }
 
+changeFieldString : FieldString -> String -> GameObject -> GameObject
+changeFieldString fieldString str obj =
+    let 
+        nFieldString = {fieldString | pValue = Just(str)}
+        variables = obj.variables
+        nVariables = {variables | strings = updateFieldString nFieldString obj.variables.strings}
+    in
+        { obj | variables = nVariables }
+
 
 
 
@@ -173,6 +190,14 @@ updateFieldBool fieldBool maybeFields =
             Nothing
         Just fields ->
             Just(ListExtra.replaceIf (\l -> l.pName == fieldBool.pName) fieldBool fields)
+
+updateFieldString : FieldString -> Maybe (List FieldString) -> Maybe (List FieldString)
+updateFieldString fieldString maybeFields =
+    case maybeFields of
+        Nothing ->
+            Nothing
+        Just fields ->
+            Just(ListExtra.replaceIf (\l -> l.pName == fieldString.pName) fieldString fields)
 
 
 

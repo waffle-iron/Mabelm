@@ -2,7 +2,7 @@ module View.View exposing (..)
 
 import Html exposing (Html, div, h2, h3, h4, text, span, form, input, button, select, option)
 import Html.Attributes exposing (id, class, disabled, placeholder, type_, checked, value)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput)
 import String.Extra as StringExtra
 
 import Messages exposing (Msg(..))
@@ -62,15 +62,12 @@ displayGameObjectField maybeFields displayFunc =
 
 
 
--- BuildObject
-
-
 
 displayGameObjectFieldString : GameObject -> FieldString -> Html Msg
 displayGameObjectFieldString obj field =
     div []
         [ span [] [ text (field.pName ++ ": ") ]
-        , input [ value (getValueString field.pValue) ] []
+        , input [ value (getValueString field.pValue), onInput (UpdateStr field obj) ] []
         ]
 
 displayGameObjectFieldInteger : GameObject -> FieldInteger -> Html Msg

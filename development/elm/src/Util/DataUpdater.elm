@@ -1,34 +1,23 @@
-module Util.DataUpdater exposing (..)
+module Util.DataUpdater exposing (updateGameObject)
 
 import Model exposing (..)
 
+updateGameObject : GameObject -> Maybe (List GamePackage) -> Maybe (List GamePackage)
+updateGameObject newObj maybeList =
+    case maybeList of
+        Nothing -> Nothing
+        Just val ->
+            Just(List.map (updatePackageList newObj) val)
 
--- GameObject -> (List GameObjectList) -> Maybe GameObjectList
--- gameObjects
-ham = 13
+updatePackageList : GameObject -> GamePackage -> GamePackage
+updatePackageList newObj gamePackage =
+    {gamePackage
+        | objects = List.map (updateObj newObj) (gamePackage.objects)
+    }
 
-
--- getSceneObject : Int -> SceneObject -> Maybe SceneObject
--- getSceneObject id rootObj =
---     if id == rootObj.id then
---         Just rootObj
---     else
---         let list = List.map (getSceneObject id) (getSceneObjectList rootObj.children) in
---         case List.head list of
---             Nothing -> Nothing
---             Just val -> val
-
--- getSceneObjectList : Children -> List SceneObject
--- getSceneObjectList (Model.Children children) =
---     children
-
--- updateSceneObject : SceneObject -> SceneObject -> SceneObject
--- updateSceneObject newSceneObj rootObj =
---     if newSceneObj.id == rootObj.id then
---         newSceneObj
---     else
---         {rootObj | children = updateChildren newSceneObj rootObj.children}
-
--- updateChildren : SceneObject -> Children -> Children
--- updateChildren newSceneObj (Children children) =
---     Children(List.map (updateSceneObject newSceneObj) children)
+updateObj : GameObject -> GameObject -> GameObject
+updateObj newObj obj =
+    if newObj.id == obj.id then
+        newObj
+    else
+        obj

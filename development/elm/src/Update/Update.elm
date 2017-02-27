@@ -46,7 +46,10 @@ update msg model =
             }, Cmd.none)
         ------------------------------------------------------------
         ToggleObject obj ->
-            (model, Cmd.none)
+            let newObj = { obj | isActive = not obj.isActive } in
+            ({model
+                | systemPackages = DataUpdater.updateGameObject newObj model.systemPackages
+            }, Cmd.none)
 
 updateSystemPackages : GamePackage -> Maybe (List GamePackage) -> Maybe (List GamePackage)
 updateSystemPackages tappedList maybeSystemPackages =

@@ -39,8 +39,8 @@ displayList list =
 
 displayGameObject : GameObject -> Html Msg
 displayGameObject obj =
-    div [ class "gameObject", onClick (ToggleObject obj) ]
-        [ h4 [ class "disableUserSelect" ] [ text obj.name ]
+    div [ class "gameObject" ]
+        [ h4 [ class "disableUserSelect", onClick (ToggleObject obj) ] [ text obj.name ]
         , if obj.isActive 
             then div []
                 [ displayGameObjectField obj.variables.strings displayGameObjectFieldString
@@ -60,7 +60,7 @@ displayGameObjectField maybeFields displayFunc =
 displayGameObjectFieldString : FieldString -> Html Msg
 displayGameObjectFieldString obj =
     div []
-        [ span [] [ text obj.pName]
+        [ span [] [ text (obj.pName ++ ": ") ]
         , case obj.pValue of
             Nothing -> span [] [ text "" ]
             Just val -> span [] [ text val ]
@@ -69,7 +69,7 @@ displayGameObjectFieldString obj =
 displayGameObjectFieldInteger : FieldInteger -> Html Msg
 displayGameObjectFieldInteger obj =
     div []
-        [ span [] [ text obj.pName]
+        [ span [] [ text (obj.pName ++ ": ") ]
         , case obj.pValue of
             Nothing -> span [] [ text "" ]
             Just val -> span [] [ text (toString val) ]
@@ -78,7 +78,7 @@ displayGameObjectFieldInteger obj =
 displayGameObjectFieldFloat : FieldFloat -> Html Msg
 displayGameObjectFieldFloat obj =
     div []
-        [ span [] [ text obj.pName]
+        [ span [] [ text (obj.pName ++ ": ") ]
         , case obj.pValue of
             Nothing -> span [] [ text "" ]
             Just val -> span [] [ text (toString val) ]
@@ -87,7 +87,7 @@ displayGameObjectFieldFloat obj =
 displayGameObjectFieldBool : FieldBool -> Html Msg
 displayGameObjectFieldBool obj =
     div []
-        [ span [] [ text obj.pName]
+        [ span [] [ text (obj.pName ++ ": ") ]
         , case obj.pValue of
             Nothing -> span [] [ text "" ]
             Just val -> span [] [ text (toString val) ]

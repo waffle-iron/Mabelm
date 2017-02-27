@@ -19,7 +19,7 @@ view model =
 
 gameSystemObjects : Model -> Html Msg
 gameSystemObjects model =
-    case model.gameObjects of
+    case model.systemPackages of
         Nothing ->
             text ""
         Just objects ->
@@ -28,7 +28,7 @@ gameSystemObjects model =
                 , div [] (List.map displayList objects)
                 ]
 
-displayList : GameObjectList -> Html Msg
+displayList : GamePackage -> Html Msg
 displayList list =
     div [ class "gameObjectChildren" ]
         [ span [ class "disableUserSelect", onClick (ToggleSystem list) ] [ text list.path]

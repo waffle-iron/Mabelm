@@ -4,7 +4,7 @@ type alias Model =
     { isCompiling :Bool
     , isRendering :Bool
     , isUpdating :Bool
-    , gameObjects :Maybe (List GameObjectList)
+    , systemPackages :Maybe (List GamePackage)
     , currentID :Int
     }
 
@@ -13,11 +13,11 @@ model =
     { isCompiling = False
     , isRendering = False
     , isUpdating = False
-    , gameObjects = Nothing
+    , systemPackages = Nothing
     , currentID = 0
     }
 
-type alias GameObjectList =
+type alias GamePackage =
     { objects :List GameObject
     , path :String
     , isVisible :Bool

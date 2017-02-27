@@ -9,5 +9,5 @@ type Msg
     | LoadCompleted String
     | ToggleButtonRender
     | ToggleButtonUpdate
-    | ToggleSystem GameObjectList
+    | ToggleSystem GamePackage
     | ToggleObject GameObject

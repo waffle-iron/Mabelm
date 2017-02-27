@@ -4,27 +4,27 @@ import Model as Model exposing (..)
 import Json.Decode as Decode
 import List.Extra as ListExtra
 
-getDataLists : String -> Maybe (List GameObjectList)
+getDataLists : String -> Maybe (List GamePackage)
 getDataLists str =
-    case (Decode.decodeString gameObjectListDecoder str) of
+    case (Decode.decodeString gamePackageDecoder str) of
         Ok data -> 
             Just(groupListsByPackage data)
         Err err ->
             let x = Debug.log("error in json") err in
             Nothing
 
-groupListsByPackage : List GameObject -> List GameObjectList
+groupListsByPackage : List GameObject -> List GamePackage
 groupListsByPackage list =
     List.sortBy .path list
         |> ListExtra.groupWhile (\x y -> x.path == y.path)
-        |> List.indexedMap makeGameObjectList
+        |> List.indexedMap makeGamePackage
 
-makeGameObjectList : Int -> List GameObject -> GameObjectList
-makeGameObjectList index list =
+makeGamePackage : Int -> List GameObject -> GamePackage
+makeGamePackage index list =
     let pathName =  case List.head list of
         Nothing -> ""
         Just head -> head.path in
-    (GameObjectList list pathName True)
+    (GamePackage list pathName True)
 
 
 
@@ -32,8 +32,8 @@ makeGameObjectList index list =
 
 
 --
-gameObjectListDecoder : Decode.Decoder (List GameObject)
-gameObjectListDecoder =
+gamePackageDecoder : Decode.Decoder (List GameObject)
+gamePackageDecoder =
     Decode.field "systemObjects" (Decode.list gameObjectDecoder)
 
 --

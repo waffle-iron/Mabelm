@@ -1,7 +1,8 @@
 port module Update.Update exposing (update)
 
+import Util.DataUpdater as DataUpdater
 import Messages exposing (Msg(..))
-import Model as Model exposing (Model, GameObject, GameObjectList)
+import Model as Model exposing (..)
 import Decoder.Decoder exposing (getDataLists)
 import List.Extra as ListExtra
 
@@ -16,7 +17,7 @@ update msg model =
         ------------------------------------------------------------
         LoadCompleted str ->
             ({model
-                | gameObjects = (getDataLists str)
+                | systemPackages = (getDataLists str)
             }, Cmd.none)
         ------------------------------------------------------------
         CompileGame ->
@@ -41,17 +42,16 @@ update msg model =
         ------------------------------------------------------------
         ToggleSystem list ->
             ({ model
-                | gameObjects = (updateGameObjects {list | isVisible = (not list.isVisible)} model.gameObjects)
+                | systemPackages = (updateSystemPackages {list | isVisible = (not list.isVisible)} model.systemPackages)
             }, Cmd.none)
         ------------------------------------------------------------
         ToggleObject obj ->
             (model, Cmd.none)
 
-
-updateGameObjects : GameObjectList -> Maybe (List GameObjectList) -> Maybe (List GameObjectList)
-updateGameObjects tappedList gameObjects =
-    case gameObjects of
+updateSystemPackages : GamePackage -> Maybe (List GamePackage) -> Maybe (List GamePackage)
+updateSystemPackages tappedList maybeSystemPackages =
+    case maybeSystemPackages of
         Nothing ->
             Nothing
-        Just objs ->
-            Just(ListExtra.replaceIf (\l -> l.path == tappedList.path) tappedList objs)
+        Just systemPackages ->
+            Just(ListExtra.replaceIf (\l -> l.path == tappedList.path) tappedList systemPackages)

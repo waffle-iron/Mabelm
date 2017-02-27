@@ -28,6 +28,7 @@ type alias GameObject =
     , path :String
     , id :Int
     , variables : GameObjectAttributes
+    , isActive :Bool
     }
 
 type alias GameObjectAttributes =

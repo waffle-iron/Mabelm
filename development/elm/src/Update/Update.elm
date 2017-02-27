@@ -13,33 +13,39 @@ update msg model =
         ------------------------------------------------------------
         NoOp ->
             (model, Cmd.none)
+        ------------------------------------------------------------
         LoadCompleted str ->
             ({model
                 | gameObjects = (getDataLists str)
             }, Cmd.none)
+        ------------------------------------------------------------
         CompileGame ->
             ({model
                 | isCompiling = True
             }, startCompile "")
+        ------------------------------------------------------------
         CompileCompleted str ->
             ({model
                 | isCompiling = False
             }, Cmd.none)
+        ------------------------------------------------------------
         ToggleButtonRender ->
             ({model
                 | isRendering = not model.isRendering
             }, Cmd.none)
+        ------------------------------------------------------------
         ToggleButtonUpdate ->
             ({model
                 | isUpdating = not model.isUpdating
             }, Cmd.none)
+        ------------------------------------------------------------
         ToggleSystem list ->
-            let nList = 
-                {list | isVisible = (not list.isVisible)}
-            in
             ({ model
-                | gameObjects = (updateGameObjects nList model.gameObjects)
+                | gameObjects = (updateGameObjects {list | isVisible = (not list.isVisible)} model.gameObjects)
             }, Cmd.none)
+        ------------------------------------------------------------
+        ToggleObject obj ->
+            (model, Cmd.none)
 
 
 updateGameObjects : GameObjectList -> Maybe (List GameObjectList) -> Maybe (List GameObjectList)

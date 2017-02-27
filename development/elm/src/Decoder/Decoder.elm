@@ -31,19 +31,21 @@ makeGameObjectList index list =
 
 
 
-
+--
 gameObjectListDecoder : Decode.Decoder (List GameObject)
 gameObjectListDecoder =
     Decode.field "systemObjects" (Decode.list gameObjectDecoder)
 
+--
 gameObjectDecoder : Decode.Decoder GameObject
 gameObjectDecoder =
-    Decode.map4 GameObject
+    Decode.map5 GameObject
         (Decode.field "name" Decode.string)
         (Decode.field "path" Decode.string)
         (Decode.field "id" Decode.int)
         (Decode.field "variables" gameObjectAttrDecoder)
-
+        (Decode.oneOf [Decode.field "isActive" Decode.bool, Decode.succeed False])
+--
 gameObjectAttrDecoder : Decode.Decoder GameObjectAttributes
 gameObjectAttrDecoder =
     Decode.map4 GameObjectAttributes
@@ -52,26 +54,33 @@ gameObjectAttrDecoder =
         (Decode.field "floats" (Decode.nullable (Decode.list fieldFloatDecoder)))
         (Decode.field "booleans" (Decode.nullable (Decode.list fieldBoolDecoder)))
 
+--
 fieldStringDecoder : Decode.Decoder FieldString
 fieldStringDecoder =
     Decode.map2 FieldString
         (Decode.field "pName" Decode.string)
         (Decode.field "pValue" (Decode.nullable Decode.string))
 
+--
 fieldIntegerDecoder : Decode.Decoder FieldInteger
 fieldIntegerDecoder =
     Decode.map2 FieldInteger
         (Decode.field "pName" Decode.string)
         (Decode.field "pValue" (Decode.nullable Decode.int))
 
+--
 fieldBoolDecoder : Decode.Decoder FieldBool
 fieldBoolDecoder =
     Decode.map2 FieldBool
         (Decode.field "pName" Decode.string)
         (Decode.field "pValue" (Decode.nullable Decode.bool))
 
+--
 fieldFloatDecoder : Decode.Decoder FieldFloat
 fieldFloatDecoder =
     Decode.map2 FieldFloat
         (Decode.field "pName" Decode.string)
         (Decode.field "pValue" (Decode.nullable Decode.float))
+
+-- oneOf [ "z" := float, succeed 0 ]
+--    , isActive :Bool

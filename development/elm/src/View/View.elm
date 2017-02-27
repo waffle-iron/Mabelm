@@ -39,12 +39,16 @@ displayList list =
 
 displayGameObject : GameObject -> Html Msg
 displayGameObject obj =
-    div [ class "gameObject" ]
+    div [ class "gameObject", onClick (ToggleObject obj) ]
         [ h4 [ class "disableUserSelect" ] [ text obj.name ]
-        , displayGameObjectField obj.variables.strings displayGameObjectFieldString
-        , displayGameObjectField obj.variables.integers displayGameObjectFieldInteger
-        , displayGameObjectField obj.variables.floats displayGameObjectFieldFloat
-        , displayGameObjectField obj.variables.booleans displayGameObjectFieldBool
+        , if obj.isActive 
+            then div []
+                [ displayGameObjectField obj.variables.strings displayGameObjectFieldString
+                , displayGameObjectField obj.variables.integers displayGameObjectFieldInteger
+                , displayGameObjectField obj.variables.floats displayGameObjectFieldFloat
+                , displayGameObjectField obj.variables.booleans displayGameObjectFieldBool
+                ]
+            else text ""
         ]
 
 displayGameObjectField : Maybe (List a) -> (a -> Html Msg) -> Html Msg
@@ -58,7 +62,7 @@ displayGameObjectFieldString obj =
     div []
         [ span [] [ text obj.pName]
         , case obj.pValue of
-            Nothing -> text ""
+            Nothing -> span [] [ text "" ]
             Just val -> span [] [ text val ]
         ]
 
@@ -67,7 +71,7 @@ displayGameObjectFieldInteger obj =
     div []
         [ span [] [ text obj.pName]
         , case obj.pValue of
-            Nothing -> text ""
+            Nothing -> span [] [ text "" ]
             Just val -> span [] [ text (toString val) ]
         ]
 
@@ -76,7 +80,7 @@ displayGameObjectFieldFloat obj =
     div []
         [ span [] [ text obj.pName]
         , case obj.pValue of
-            Nothing -> text ""
+            Nothing -> span [] [ text "" ]
             Just val -> span [] [ text (toString val) ]
         ]
 
@@ -85,6 +89,6 @@ displayGameObjectFieldBool obj =
     div []
         [ span [] [ text obj.pName]
         , case obj.pValue of
-            Nothing -> text ""
+            Nothing -> span [] [ text "" ]
             Just val -> span [] [ text (toString val) ]
         ]

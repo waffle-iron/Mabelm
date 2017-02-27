@@ -11,3 +11,9 @@ type Msg
     | ToggleButtonUpdate
     | ToggleSystem GamePackage
     | ToggleObject GameObject
+    | IncrementInt FieldInteger GameObject
+    | DecrementInt FieldInteger GameObject
+    | IncrementFloat FieldFloat GameObject
+    | DecrementFloat FieldFloat GameObject
+    | ToggleBool FieldBool GameObject
+    | BuildObject GameObject

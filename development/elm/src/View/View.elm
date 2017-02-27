@@ -1,7 +1,7 @@
 module View.View exposing (..)
 
 import Html exposing (Html, div, h2, h3, h4, text, span, form, input, button, select, option)
-import Html.Attributes exposing (id, class, disabled, placeholder, type_, checked)
+import Html.Attributes exposing (id, class, disabled, placeholder, type_, checked, value)
 import Html.Events exposing (onClick)
 import String.Extra as StringExtra
 
@@ -44,10 +44,11 @@ displayGameObject obj =
         [ h4 [ class "disableUserSelect", onClick (ToggleObject obj) ] [ text obj.name ]
         , if obj.isActive 
             then div []
-                [ displayGameObjectField obj.variables.strings displayGameObjectFieldString
-                , displayGameObjectField obj.variables.integers displayGameObjectFieldInteger
-                , displayGameObjectField obj.variables.floats displayGameObjectFieldFloat
-                , displayGameObjectField obj.variables.booleans displayGameObjectFieldBool
+                [ displayGameObjectField obj.variables.strings (displayGameObjectFieldString obj)
+                , displayGameObjectField obj.variables.integers (displayGameObjectFieldInteger obj)
+                , displayGameObjectField obj.variables.floats (displayGameObjectFieldFloat obj)
+                , displayGameObjectField obj.variables.booleans (displayGameObjectFieldBool obj)
+                , button [ onClick (BuildObject obj) ] [ text "Build" ]
                 ]
             else text ""
         ]
@@ -61,48 +62,48 @@ displayGameObjectField maybeFields displayFunc =
 
 
 
+-- BuildObject
 
 
 
-
-displayGameObjectFieldString : FieldString -> Html Msg
-displayGameObjectFieldString obj =
+displayGameObjectFieldString : GameObject -> FieldString -> Html Msg
+displayGameObjectFieldString obj field =
     div []
-        [ span [] [ text (obj.pName ++ ": ") ]
-        , input [ placeholder (getValueString obj.pValue) ] []
+        [ span [] [ text (field.pName ++ ": ") ]
+        , input [ value (getValueString field.pValue) ] []
         ]
 
-displayGameObjectFieldInteger : FieldInteger -> Html Msg
-displayGameObjectFieldInteger obj =
+displayGameObjectFieldInteger : GameObject -> FieldInteger -> Html Msg
+displayGameObjectFieldInteger obj field =
     div []
-        [ span [] [ text (obj.pName ++ ": ") ]
+        [ span [] [ text (field.pName ++ ": ") ]
         , div []
-            [ input [ placeholder (getValueString obj.pValue) ] []
-            , button [] [ text "-" ]
-            , button [] [ text "+" ]
+            [ input [ value (getValueString field.pValue) ] []
+            , button [ onClick (DecrementInt field obj) ] [ text "-" ]
+            , button [ onClick (IncrementInt field obj) ] [ text "+" ]
             ]
         ]
 
-displayGameObjectFieldFloat : FieldFloat -> Html Msg
-displayGameObjectFieldFloat obj =
+displayGameObjectFieldFloat : GameObject -> FieldFloat -> Html Msg
+displayGameObjectFieldFloat obj field =
     div []
-        [ span [] [ text (obj.pName ++ ": ") ]
+        [ span [] [ text (field.pName ++ ": ") ]
         , div []
-            [ input [ placeholder (getValueString obj.pValue) ] []
-            , button [] [ text "-" ]
-            , button [] [ text "+" ]
+            [ input [ value (getValueString field.pValue) ] []
+            , button [ onClick (DecrementFloat field obj) ] [ text "-" ]
+            , button [ onClick (IncrementFloat field obj) ] [ text "+" ]
             ]
         ]
 
-displayGameObjectFieldBool : FieldBool -> Html Msg
-displayGameObjectFieldBool obj =
-    let checkedVal = case obj.pValue of
+displayGameObjectFieldBool : GameObject -> FieldBool -> Html Msg
+displayGameObjectFieldBool obj field =
+    let checkedVal = case field.pValue of
         Nothing -> False
         Just val -> val
     in
     div []
-        [ span [] [ text (obj.pName ++ ": ") ]
-        , input [ type_ "checkbox", checked checkedVal ] []
+        [ span [] [ text (field.pName ++ ": ") ]
+        , input [ type_ "checkbox", checked checkedVal, onClick (ToggleBool field obj) ] []
         ]
 
 getValueString : Maybe a -> String

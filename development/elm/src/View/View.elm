@@ -1,7 +1,8 @@
 module View.View exposing (..)
 
 import Html exposing (Html, div, h2, h3, h4, text, span)
-import Html.Attributes exposing (id, class)
+import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 
 import Messages exposing (Msg(..))
 import Model exposing (Model, GameObject, GameObjectList)
@@ -29,13 +30,29 @@ gameSystemObjects model =
 
 displayList : GameObjectList -> Html Msg
 displayList list =
-    div [ class "gameObjectChildren" ]
-        [ span [] [ text list.path]
-        , div [] (List.map displayGameObject list.objects)
+    let className = "gameObjectChildren"
+        |> stateVisible list.isVisible in
+
+    let ch = if list.isVisible then
+            div [] (List.map displayGameObject list.objects)
+        else
+            text ""
+    in
+
+    div [ class className ]
+        [ span [ class "disableUserSelect", onClick (ToggleSystem list) ] [ text list.path]
+        , ch
         ]
 
 displayGameObject : GameObject -> Html Msg
 displayGameObject obj =
     div [ class "gameObject" ]
-        [ h4 [] [ text obj.name ]
+        [ h4 [ class "disableUserSelect" ] [ text obj.name ]
         ]
+
+stateVisible : Bool -> String -> String
+stateVisible isVisible str = 
+    if isVisible then
+        str ++ " isVisible"
+    else
+        str

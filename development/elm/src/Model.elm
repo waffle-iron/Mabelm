@@ -5,6 +5,7 @@ type alias Model =
     , isRendering :Bool
     , isUpdating :Bool
     , gameObjects :Maybe (List GameObjectList)
+    , currentID :Int
     }
 
 model : Model
@@ -13,6 +14,7 @@ model =
     , isRendering = False
     , isUpdating = False
     , gameObjects = Nothing
+    , currentID = 0
     }
 
 type alias GameObjectList =
@@ -24,4 +26,5 @@ type alias GameObjectList =
 type alias GameObject =
     { name :String
     , path :String
+    , id :Int
     }

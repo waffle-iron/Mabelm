@@ -1,5 +1,7 @@
 module Messages exposing (Msg(..))
 
+import Model exposing (GameObjectList)
+
 type Msg
     = NoOp
     | CompileGame
@@ -7,3 +9,4 @@ type Msg
     | LoadCompleted String
     | ToggleButtonRender
     | ToggleButtonUpdate
+    | ToggleSystem GameObjectList

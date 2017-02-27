@@ -33,7 +33,7 @@ body, html {
 	right: 0;
 	position: absolute;
 	background-color: desaturate(lighten($baseColor, 20), 95);
-	width: 200px;
+	width: 260px;
 	height: 100vh;
 	z-index: 2;
 }
@@ -99,7 +99,15 @@ body, html {
 	border-top: 2px solid #ccc;
 	background-color: rgba(255,255,255,0.1);
 	padding: 2px;
+
+	&.isVisible {
+	}
 }
 .gameObjectChildren:last-of-type {
 	border-bottom: 2px solid #ccc;
+}
+
+.disableUserSelect {
+	user-select: none;
+	-webkit-user-select: none;
 }

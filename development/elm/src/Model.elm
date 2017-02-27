@@ -38,21 +38,21 @@ type alias GameObjectAttributes =
     }
 
 type alias FieldInteger =
-    { name :String
-    , value :Int
+    { pName :String
+    , pValue :Maybe Int
     }
 
 type alias FieldFloat =
-    { name :String
-    , value :Float
+    { pName :String
+    , pValue :Maybe Float
     }
 
 type alias FieldString =
-    { name :String
-    , value :String
+    { pName :String
+    , pValue :Maybe String
     }
 
 type alias FieldBool =
-    { name :String
-    , value :Bool
+    { pName :String
+    , pValue :Maybe Bool
     }

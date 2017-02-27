@@ -28,6 +28,10 @@ makeGameObjectList index list =
 
 
 
+
+
+
+
 gameObjectListDecoder : Decode.Decoder (List GameObject)
 gameObjectListDecoder =
     Decode.field "systemObjects" (Decode.list gameObjectDecoder)
@@ -48,28 +52,26 @@ gameObjectAttrDecoder =
         (Decode.field "floats" (Decode.nullable (Decode.list fieldFloatDecoder)))
         (Decode.field "booleans" (Decode.nullable (Decode.list fieldBoolDecoder)))
 
-
---
 fieldStringDecoder : Decode.Decoder FieldString
 fieldStringDecoder =
     Decode.map2 FieldString
         (Decode.field "pName" Decode.string)
-        (Decode.field "pValue" Decode.string)
+        (Decode.field "pValue" (Decode.nullable Decode.string))
 
 fieldIntegerDecoder : Decode.Decoder FieldInteger
 fieldIntegerDecoder =
     Decode.map2 FieldInteger
         (Decode.field "pName" Decode.string)
-        (Decode.field "pValue" Decode.int)
+        (Decode.field "pValue" (Decode.nullable Decode.int))
 
 fieldBoolDecoder : Decode.Decoder FieldBool
 fieldBoolDecoder =
     Decode.map2 FieldBool
         (Decode.field "pName" Decode.string)
-        (Decode.field "pValue" Decode.bool)
+        (Decode.field "pValue" (Decode.nullable Decode.bool))
 
 fieldFloatDecoder : Decode.Decoder FieldFloat
 fieldFloatDecoder =
     Decode.map2 FieldFloat
         (Decode.field "pName" Decode.string)
-        (Decode.field "pValue" Decode.float)
+        (Decode.field "pValue" (Decode.nullable Decode.float))

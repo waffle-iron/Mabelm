@@ -19,9 +19,15 @@ update msg model =
             (model, Cmd.none)
         ------------------------------------------------------------
         LoadCompleted str ->
-            ({model
-                | modelPackages = (getDataLists str)
-            }, Cmd.none)
+            let maybeData = getDataLists str in
+            case maybeData of
+                Nothing -> (model, Cmd.none)
+                Just (modelPackages, systemPackages, spritePackages) ->
+                    ({model
+                        | modelPackages = Just modelPackages
+                        , systemPackages = Just systemPackages
+                        , spritePackages = Just spritePackages
+                    }, Cmd.none)
         ------------------------------------------------------------
         CompileGame ->
             ({model

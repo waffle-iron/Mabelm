@@ -4,11 +4,11 @@ import Model as Model exposing (..)
 import Json.Decode as Decode
 import List.Extra as ListExtra
 
-getDataLists : String -> Maybe (List GamePackage)
+getDataLists : String -> Maybe ((List GamePackage), (List GamePackage), (List GamePackage))
 getDataLists str =
     case (Decode.decodeString gamePackageDecoder str) of
-        Ok data -> 
-            Just(groupListsByPackage data)
+        Ok data ->
+            Just((groupListsByPackage data.modelPackages), (groupListsByPackage data.systemPackages), (groupListsByPackage data.spritePackages))
         Err err ->
             let x = Debug.log("error in json") err in
             Nothing
@@ -29,13 +29,13 @@ makeGamePackage index list =
 
 
 
-
-
 --
-gamePackageDecoder : Decode.Decoder (List GameObject)
+gamePackageDecoder : Decode.Decoder AllPackages
 gamePackageDecoder =
-    Decode.field "modelObjects" (Decode.list gameObjectDecoder)
-
+    Decode.map3 AllPackages
+        (Decode.field "modelObjects" (Decode.list gameObjectDecoder))
+        (Decode.field "systemObjects" (Decode.list gameObjectDecoder))
+        (Decode.field "spriteObjects" (Decode.list gameObjectDecoder))
 --
 gameObjectDecoder : Decode.Decoder GameObject
 gameObjectDecoder =

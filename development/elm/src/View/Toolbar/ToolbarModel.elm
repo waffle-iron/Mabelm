@@ -32,7 +32,7 @@ displayList list =
 displayGameObject : GameObject -> Html Msg
 displayGameObject obj =
     div [ class "gameObject border p1" ]
-        [ h5 [ class "disableUserSelect", onClick (ToggleObject obj) ] [ text obj.name ]
+        [ h5 [ class "disableUserSelect m0 mb1 mt1", onClick (ToggleObject obj) ] [ text obj.name ]
         , if obj.isActive 
             then div []
                 [ displayGameObjectField obj.variables.strings (displayGameObjectFieldString obj)

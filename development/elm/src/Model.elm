@@ -66,3 +66,9 @@ type alias Field a =
     { pName :String
     , pValue :Maybe a
     }
+
+type alias AllPackages =
+    { modelPackages : (List GameObject)
+    , systemPackages : (List GameObject)
+    , spritePackages : (List GameObject)
+    }

@@ -26,9 +26,9 @@ toolbar model =
         |> stateCompiling model.isCompiling in
 
     div [ class "toolbar" ]
-        [ toolbar__button model baseClass "update" ToggleButtonUpdate updateButton (Color.rgb 100 255 100) 50
-        , toolbar__button model baseClass "render" ToggleButtonRender renderButton (Color.rgb 100 100 255) 50
-        , toolbar__button model baseClass "compile" CompileGame autorenew (Color.rgb 200 200 200) 50
+        [ toolbar__button model baseClass "update" ToggleButtonUpdate updateButton (Color.rgb 100 100 100) 50
+        , toolbar__button model baseClass "render" ToggleButtonRender renderButton (Color.rgb 100 100 100) 50
+        , toolbar__button model baseClass "compile" CompileGame autorenew (Color.rgb 100 100 100) 50
         ]
 
 toolbar__button : Model -> ClassName -> ClassName -> Msg -> MaterialIcon -> Color.Color -> Int -> Html Msg

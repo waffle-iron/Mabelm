@@ -34,7 +34,7 @@ makeGamePackage index list =
 --
 gamePackageDecoder : Decode.Decoder (List GameObject)
 gamePackageDecoder =
-    Decode.field "systemObjects" (Decode.list gameObjectDecoder)
+    Decode.field "modelObjects" (Decode.list gameObjectDecoder)
 
 --
 gameObjectDecoder : Decode.Decoder GameObject

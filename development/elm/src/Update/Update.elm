@@ -20,7 +20,7 @@ update msg model =
         ------------------------------------------------------------
         LoadCompleted str ->
             ({model
-                | systemPackages = (getDataLists str)
+                | modelPackages = (getDataLists str)
             }, Cmd.none)
         ------------------------------------------------------------
         CompileGame ->
@@ -45,13 +45,13 @@ update msg model =
         ------------------------------------------------------------
         ToggleSystem list ->
             ({ model
-                | systemPackages = (updateSystemPackages {list | isVisible = (not list.isVisible)} model.systemPackages)
+                | modelPackages = (updateSystemPackages {list | isVisible = (not list.isVisible)} model.modelPackages)
             }, Cmd.none)
         ------------------------------------------------------------
         ToggleObject obj ->
             let newObj = { obj | isActive = not obj.isActive } in
             ({model
-                | systemPackages = DataUpdater.updateGameObject newObj model.systemPackages
+                | modelPackages = DataUpdater.updateGameObject newObj model.modelPackages
             }, Cmd.none)
         ------------------------------------------------------------
         IncrementInt fieldInt obj ->
@@ -59,7 +59,7 @@ update msg model =
                 nObj = (incrementDecrementObjInt fieldInt obj (+))
             in
             ({model
-                | systemPackages = DataUpdater.updateGameObject nObj model.systemPackages
+                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
             }, Cmd.none)
         ------------------------------------------------------------
         DecrementInt fieldInt obj ->
@@ -67,7 +67,7 @@ update msg model =
                 nObj = (incrementDecrementObjInt fieldInt obj (-))
             in
             ({model
-                | systemPackages = DataUpdater.updateGameObject nObj model.systemPackages
+                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
             }, Cmd.none)
         ------------------------------------------------------------
         IncrementFloat fieldFloat obj ->
@@ -75,7 +75,7 @@ update msg model =
                 nObj = (incrementDecrementObjFloat fieldFloat obj (+))
             in
             ({model
-                | systemPackages = DataUpdater.updateGameObject nObj model.systemPackages
+                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
             }, Cmd.none)
         ------------------------------------------------------------
         DecrementFloat fieldFloat obj ->
@@ -83,7 +83,7 @@ update msg model =
                 nObj = (incrementDecrementObjFloat fieldFloat obj (-))
             in
             ({model
-                | systemPackages = DataUpdater.updateGameObject nObj model.systemPackages
+                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
             }, Cmd.none)
         ------------------------------------------------------------
         ToggleBool fieldBool obj ->
@@ -91,7 +91,7 @@ update msg model =
                 nObj = (toggleObjBool fieldBool obj)
             in
             ({model
-                | systemPackages = DataUpdater.updateGameObject nObj model.systemPackages
+                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
             }, Cmd.none)
         ------------------------------------------------------------
         UpdateStr fieldString obj str ->
@@ -99,7 +99,7 @@ update msg model =
                 nObj = (changeFieldString fieldString str obj)
             in
             ({model
-                | systemPackages = DataUpdater.updateGameObject nObj model.systemPackages
+                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
             }, Cmd.none)
         ------------------------------------------------------------
         UpdateInt fieldInt obj str ->
@@ -107,7 +107,7 @@ update msg model =
                 nObj = (changeFieldInt fieldInt str obj)
             in
             ({model
-                | systemPackages = DataUpdater.updateGameObject nObj model.systemPackages
+                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
             }, Cmd.none)
         ------------------------------------------------------------
         UpdateFloat fieldFloat obj str ->
@@ -115,12 +115,29 @@ update msg model =
                 nObj = (changeFieldFloat fieldFloat str obj)
             in
             ({model
-                | systemPackages = DataUpdater.updateGameObject nObj model.systemPackages
+                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
             }, Cmd.none)
         ------------------------------------------------------------
         BuildObject obj ->
             (model, (addModel (Encoder.objToValue obj)))
+        ------------------------------------------------------------
+        ChangeVal field obj ->
+            (model, Cmd.none)
 
+
+
+updateSystemPackages : GamePackage -> Maybe (List GamePackage) -> Maybe (List GamePackage)
+updateSystemPackages tappedList maybeSystemPackages =
+    case maybeSystemPackages of
+        Nothing ->
+            Nothing
+        Just systemPackages ->
+            Just(ListExtra.replaceIf (\l -> l.path == tappedList.path) tappedList systemPackages)
+
+
+
+
+            
 
 
 
@@ -200,11 +217,3 @@ updateField field maybeFields =
             Nothing
         Just fields ->
             Just(ListExtra.replaceIf (\l -> l.pName == field.pName) field fields)
-
-updateSystemPackages : GamePackage -> Maybe (List GamePackage) -> Maybe (List GamePackage)
-updateSystemPackages tappedList maybeSystemPackages =
-    case maybeSystemPackages of
-        Nothing ->
-            Nothing
-        Just systemPackages ->
-            Just(ListExtra.replaceIf (\l -> l.path == tappedList.path) tappedList systemPackages)

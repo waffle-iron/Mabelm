@@ -4,7 +4,9 @@ type alias Model =
     { isCompiling :Bool
     , isRendering :Bool
     , isUpdating :Bool
+    , modelPackages :Maybe (List GamePackage)
     , systemPackages :Maybe (List GamePackage)
+    , spritePackages :Maybe (List GamePackage)
     , currentID :Int
     }
 
@@ -13,7 +15,9 @@ model =
     { isCompiling = False
     , isRendering = False
     , isUpdating = False
+    , modelPackages = Nothing
     , systemPackages = Nothing
+    , spritePackages = Nothing
     , currentID = 0
     }
 

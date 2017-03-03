@@ -4,7 +4,7 @@ import Model as Model exposing (..)
 import Json.Decode as Decode
 import List.Extra as ListExtra
 
-getDataLists : String -> Maybe ((List GamePackage), (List GamePackage), (List GamePackage))
+getDataLists : String -> Maybe (GamePackageGroup, GamePackageGroup, GamePackageGroup)
 getDataLists str =
     case (Decode.decodeString gamePackageDecoder str) of
         Ok data ->
@@ -13,11 +13,21 @@ getDataLists str =
             let x = Debug.log("error in json") err in
             Nothing
 
-groupListsByPackage : List GameObject -> List GamePackage
+groupListsByPackage : List GameObject -> GamePackageGroup
 groupListsByPackage list =
     List.sortBy .path list
         |> ListExtra.groupWhile (\x y -> x.path == y.path)
         |> List.indexedMap makeGamePackage
+        |> makeGamePackageGroup
+
+makeGamePackageGroup : List GamePackage -> GamePackageGroup
+makeGamePackageGroup packages =
+    let 
+        packageType = case List.head packages of
+            Nothing -> Model_
+            Just head -> head.packageType
+    in
+    (GamePackageGroup packages True packageType)
 
 makeGamePackage : Int -> List GameObject -> GamePackage
 makeGamePackage index list =

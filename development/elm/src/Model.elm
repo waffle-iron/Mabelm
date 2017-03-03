@@ -4,9 +4,9 @@ type alias Model =
     { isCompiling :Bool
     , isRendering :Bool
     , isUpdating :Bool
-    , modelPackages :Maybe (List GamePackage)
-    , systemPackages :Maybe (List GamePackage)
-    , spritePackages :Maybe (List GamePackage)
+    , modelPackages :Maybe GamePackageGroup
+    , systemPackages :Maybe GamePackageGroup
+    , spritePackages :Maybe GamePackageGroup
     , currentID :Int
     }
 
@@ -19,6 +19,12 @@ model =
     , systemPackages = Nothing
     , spritePackages = Nothing
     , currentID = 0
+    }
+
+type alias GamePackageGroup =
+    { packages :List GamePackage
+    , isVisible :Bool
+    , packageType :GameObjectType
     }
 
 type alias GamePackage =

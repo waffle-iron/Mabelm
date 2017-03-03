@@ -2,12 +2,15 @@ module Util.DataUpdater exposing (updateGameObject)
 
 import Model exposing (..)
 
-updateGameObject : GameObject -> Maybe (List GamePackage) -> Maybe (List GamePackage)
-updateGameObject newObj maybeList =
-    case maybeList of
+updateGameObject : GameObject -> Maybe GamePackageGroup -> Maybe GamePackageGroup
+updateGameObject newObj maybePackageGroup =
+    case maybePackageGroup of
         Nothing -> Nothing
-        Just val ->
-            Just(List.map (updatePackageList newObj) val)
+        Just packageGroup ->
+            let 
+                nPackages = List.map (updatePackageList newObj) packageGroup.packages
+            in
+            Just {packageGroup | packages = nPackages}
 
 updatePackageList : GameObject -> GamePackage -> GamePackage
 updatePackageList newObj gamePackage =

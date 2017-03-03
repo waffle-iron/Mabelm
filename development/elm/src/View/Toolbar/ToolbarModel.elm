@@ -8,15 +8,17 @@ import String.Extra as StringExtra
 import Messages exposing (Msg(..))
 import Model exposing (..)
 
-displayGamePackage : String -> (Maybe (List GamePackage)) -> Html Msg
-displayGamePackage title maybePackage =
-    case maybePackage of
+displayGamePackage : String -> (Maybe GamePackageGroup) -> Html Msg
+displayGamePackage title maybeGroupPackage =
+    case maybeGroupPackage of
         Nothing ->
             text ""
-        Just objects ->
+        Just group ->
             div []
-                [ h3 [] [ text title ]
-                , div [] (List.map displayListOfGameObjects objects)
+                [ h3 [ onClick (TogglePackageGroup group), class "disableUserSelect" ] [ text title ]
+                , if group.isVisible
+                    then div [] (List.map displayListOfGameObjects group.packages)
+                    else text ""
                 ]
 
 displayListOfGameObjects : GamePackage -> Html Msg

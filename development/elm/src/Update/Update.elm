@@ -49,6 +49,16 @@ update msg model =
                 | isUpdating = not model.isUpdating
             }, Cmd.none)
         ------------------------------------------------------------
+        TogglePackageGroup packageGroup ->
+            let 
+                setPackageList = case packageGroup.packageType of
+                    Sprite -> setSpritePackageList
+                    Model_ -> setModelPackageList
+                    System -> setSystemPackageList
+                nPackageGroup = {packageGroup | isVisible = not packageGroup.isVisible}
+            in
+            (setPackageList model (Just nPackageGroup), Cmd.none)
+        ------------------------------------------------------------
         ToggleSystem list ->
             let 
                 (packageList, setPackageList) = case list.packageType of
@@ -56,7 +66,7 @@ update msg model =
                     Model_ -> (model.modelPackages, setModelPackageList)
                     System -> (model.systemPackages, setSystemPackageList)
             in
-            (setPackageList model (updatePackage {list | isVisible = (not list.isVisible)} packageList), Cmd.none)
+            (setPackageList model (updatePackageGroup {list | isVisible = (not list.isVisible)} packageList), Cmd.none)
         ------------------------------------------------------------
         ToggleObject obj ->
             let 
@@ -156,22 +166,26 @@ update msg model =
 
 
 
-updatePackage : GamePackage -> Maybe (List GamePackage) -> Maybe (List GamePackage)
-updatePackage tappedList maybeGamePackage =
-    case maybeGamePackage of
+updatePackage : GamePackage -> List GamePackage -> List GamePackage
+updatePackage tappedList gamePackage =
+    ListExtra.replaceIf (\l -> l.path == tappedList.path) tappedList gamePackage
+
+
+updatePackageGroup : GamePackage -> Maybe GamePackageGroup -> Maybe GamePackageGroup
+updatePackageGroup tappedList maybePackageGroup =
+    case maybePackageGroup of
         Nothing ->
             Nothing
-        Just gamePackage ->
-            Just(ListExtra.replaceIf (\l -> l.path == tappedList.path) tappedList gamePackage)
+        Just packageGroup ->
+            Just {packageGroup | packages = updatePackage tappedList packageGroup.packages}
 
-
-setModelPackageList : Model -> (Maybe (List GamePackage)) -> Model
+setModelPackageList : Model -> (Maybe GamePackageGroup) -> Model
 setModelPackageList model maybePackages = 
     { model | modelPackages = maybePackages }
-setSpritePackageList : Model -> (Maybe (List GamePackage)) -> Model
+setSpritePackageList : Model -> (Maybe GamePackageGroup) -> Model
 setSpritePackageList model maybePackages = 
     { model | spritePackages = maybePackages }
-setSystemPackageList : Model -> (Maybe (List GamePackage)) -> Model
+setSystemPackageList : Model -> (Maybe GamePackageGroup) -> Model
 setSystemPackageList model maybePackages = 
     { model | systemPackages = maybePackages }
 

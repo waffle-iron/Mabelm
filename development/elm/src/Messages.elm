@@ -10,9 +10,8 @@ type Msg
     | ToggleButtonRender
     | ToggleButtonUpdate
     | ToggleSystem GamePackage
+    | TogglePackageGroup GamePackageGroup
     | ToggleObject GameObject
-
-
 
     | IncrementInt FieldInteger GameObject
     | DecrementInt FieldInteger GameObject

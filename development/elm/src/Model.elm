@@ -25,6 +25,7 @@ type alias GamePackage =
     { objects :List GameObject
     , path :String
     , isVisible :Bool
+    , packageType :GameObjectType
     }
 
 type alias GameObject =
@@ -33,6 +34,7 @@ type alias GameObject =
     , id :Int
     , variables : GameObjectAttributes
     , isActive :Bool
+    , gameObjectType :GameObjectType
     }
 
 type alias GameObjectAttributes =
@@ -72,3 +74,8 @@ type alias AllPackages =
     , systemPackages : (List GameObject)
     , spritePackages : (List GameObject)
     }
+
+type GameObjectType
+    = Sprite
+    | System
+    | Model_

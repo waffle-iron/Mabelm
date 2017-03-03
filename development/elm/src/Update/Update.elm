@@ -50,79 +50,103 @@ update msg model =
             }, Cmd.none)
         ------------------------------------------------------------
         ToggleSystem list ->
-            ({ model
-                | modelPackages = (updateSystemPackages {list | isVisible = (not list.isVisible)} model.modelPackages)
-            }, Cmd.none)
+            let 
+                (packageList, setPackageList) = case list.packageType of
+                    Sprite -> (model.spritePackages, setSpritePackageList)
+                    Model_ -> (model.modelPackages, setModelPackageList)
+                    System -> (model.systemPackages, setSystemPackageList)
+            in
+            (setPackageList model (updatePackage {list | isVisible = (not list.isVisible)} packageList), Cmd.none)
         ------------------------------------------------------------
         ToggleObject obj ->
-            let newObj = { obj | isActive = not obj.isActive } in
-            ({model
-                | modelPackages = DataUpdater.updateGameObject newObj model.modelPackages
-            }, Cmd.none)
+            let 
+                nObj = { obj | isActive = not obj.isActive }
+                (packageList, setPackageList) = case obj.gameObjectType of
+                    Sprite -> (model.spritePackages, setSpritePackageList)
+                    Model_ -> (model.modelPackages, setModelPackageList)
+                    System -> (model.systemPackages, setSystemPackageList)
+            in
+            (setPackageList model (DataUpdater.updateGameObject nObj packageList), Cmd.none)
         ------------------------------------------------------------
         IncrementInt fieldInt obj ->
             let 
                 nObj = (incrementDecrementObjInt fieldInt obj (+))
+                (packageList, setPackageList) = case obj.gameObjectType of
+                    Sprite -> (model.spritePackages, setSpritePackageList)
+                    Model_ -> (model.modelPackages, setModelPackageList)
+                    System -> (model.systemPackages, setSystemPackageList)
             in
-            ({model
-                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
-            }, Cmd.none)
+            (setPackageList model (DataUpdater.updateGameObject nObj packageList), Cmd.none)
         ------------------------------------------------------------
         DecrementInt fieldInt obj ->
             let 
                 nObj = (incrementDecrementObjInt fieldInt obj (-))
+                (packageList, setPackageList) = case obj.gameObjectType of
+                    Sprite -> (model.spritePackages, setSpritePackageList)
+                    Model_ -> (model.modelPackages, setModelPackageList)
+                    System -> (model.systemPackages, setSystemPackageList)
             in
-            ({model
-                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
-            }, Cmd.none)
+            (setPackageList model (DataUpdater.updateGameObject nObj packageList), Cmd.none)
         ------------------------------------------------------------
         IncrementFloat fieldFloat obj ->
             let 
                 nObj = (incrementDecrementObjFloat fieldFloat obj (+))
+                (packageList, setPackageList) = case obj.gameObjectType of
+                    Sprite -> (model.spritePackages, setSpritePackageList)
+                    Model_ -> (model.modelPackages, setModelPackageList)
+                    System -> (model.systemPackages, setSystemPackageList)
             in
-            ({model
-                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
-            }, Cmd.none)
+            (setPackageList model (DataUpdater.updateGameObject nObj packageList), Cmd.none)
         ------------------------------------------------------------
         DecrementFloat fieldFloat obj ->
             let 
                 nObj = (incrementDecrementObjFloat fieldFloat obj (-))
+                (packageList, setPackageList) = case obj.gameObjectType of
+                    Sprite -> (model.spritePackages, setSpritePackageList)
+                    Model_ -> (model.modelPackages, setModelPackageList)
+                    System -> (model.systemPackages, setSystemPackageList)
             in
-            ({model
-                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
-            }, Cmd.none)
+            (setPackageList model (DataUpdater.updateGameObject nObj packageList), Cmd.none)
         ------------------------------------------------------------
         ToggleBool fieldBool obj ->
             let 
                 nObj = (toggleObjBool fieldBool obj)
+                (packageList, setPackageList) = case obj.gameObjectType of
+                    Sprite -> (model.spritePackages, setSpritePackageList)
+                    Model_ -> (model.modelPackages, setModelPackageList)
+                    System -> (model.systemPackages, setSystemPackageList)
             in
-            ({model
-                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
-            }, Cmd.none)
+            (setPackageList model (DataUpdater.updateGameObject nObj packageList), Cmd.none)
         ------------------------------------------------------------
         UpdateStr fieldString obj str ->
             let 
                 nObj = (changeFieldString fieldString str obj)
+                (packageList, setPackageList) = case obj.gameObjectType of
+                    Sprite -> (model.spritePackages, setSpritePackageList)
+                    Model_ -> (model.modelPackages, setModelPackageList)
+                    System -> (model.systemPackages, setSystemPackageList)
             in
-            ({model
-                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
-            }, Cmd.none)
+            (setPackageList model (DataUpdater.updateGameObject nObj packageList), Cmd.none)
         ------------------------------------------------------------
         UpdateInt fieldInt obj str ->
             let 
                 nObj = (changeFieldInt fieldInt str obj)
+                (packageList, setPackageList) = case obj.gameObjectType of
+                    Sprite -> (model.spritePackages, setSpritePackageList)
+                    Model_ -> (model.modelPackages, setModelPackageList)
+                    System -> (model.systemPackages, setSystemPackageList)
             in
-            ({model
-                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
-            }, Cmd.none)
+            (setPackageList model (DataUpdater.updateGameObject nObj packageList), Cmd.none)
         ------------------------------------------------------------
         UpdateFloat fieldFloat obj str ->
             let 
                 nObj = (changeFieldFloat fieldFloat str obj)
+                (packageList, setPackageList) = case obj.gameObjectType of
+                    Sprite -> (model.spritePackages, setSpritePackageList)
+                    Model_ -> (model.modelPackages, setModelPackageList)
+                    System -> (model.systemPackages, setSystemPackageList)
             in
-            ({model
-                | modelPackages = DataUpdater.updateGameObject nObj model.modelPackages
-            }, Cmd.none)
+            (setPackageList model (DataUpdater.updateGameObject nObj packageList), Cmd.none)
         ------------------------------------------------------------
         BuildObject obj ->
             (model, (addModel (Encoder.objToValue obj)))
@@ -132,16 +156,24 @@ update msg model =
 
 
 
-updateSystemPackages : GamePackage -> Maybe (List GamePackage) -> Maybe (List GamePackage)
-updateSystemPackages tappedList maybeSystemPackages =
-    case maybeSystemPackages of
+updatePackage : GamePackage -> Maybe (List GamePackage) -> Maybe (List GamePackage)
+updatePackage tappedList maybeGamePackage =
+    case maybeGamePackage of
         Nothing ->
             Nothing
-        Just systemPackages ->
-            Just(ListExtra.replaceIf (\l -> l.path == tappedList.path) tappedList systemPackages)
+        Just gamePackage ->
+            Just(ListExtra.replaceIf (\l -> l.path == tappedList.path) tappedList gamePackage)
 
 
-
+setModelPackageList : Model -> (Maybe (List GamePackage)) -> Model
+setModelPackageList model maybePackages = 
+    { model | modelPackages = maybePackages }
+setSpritePackageList : Model -> (Maybe (List GamePackage)) -> Model
+setSpritePackageList model maybePackages = 
+    { model | spritePackages = maybePackages }
+setSystemPackageList : Model -> (Maybe (List GamePackage)) -> Model
+setSystemPackageList model maybePackages = 
+    { model | systemPackages = maybePackages }
 
             
 

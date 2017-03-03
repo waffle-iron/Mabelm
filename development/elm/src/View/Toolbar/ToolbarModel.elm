@@ -1,4 +1,4 @@
-module View.Toolbar.ToolbarModel exposing (gameSystemObjects)
+module View.Toolbar.ToolbarModel exposing (displayGamePackage)
 
 import Html exposing (Html, div, h2, h3, h4, h5, text, p, input, button)
 import Html.Attributes exposing (id, class, type_, checked, value)
@@ -8,20 +8,19 @@ import String.Extra as StringExtra
 import Messages exposing (Msg(..))
 import Model exposing (..)
 
-
-gameSystemObjects : Model -> Html Msg
-gameSystemObjects model =
-    case model.modelPackages of
+displayGamePackage : String -> (Maybe (List GamePackage)) -> Html Msg
+displayGamePackage title maybePackage =
+    case maybePackage of
         Nothing ->
             text ""
         Just objects ->
-            div [ id "gameSystemObjects", class "p1" ]
-                [ h3 [] [ text "Models" ]
-                , div [] (List.map displayList objects)
+            div []
+                [ h3 [] [ text title ]
+                , div [] (List.map displayListOfGameObjects objects)
                 ]
 
-displayList : GamePackage -> Html Msg
-displayList list =
+displayListOfGameObjects : GamePackage -> Html Msg
+displayListOfGameObjects list =
     div [ class "gameObjectChildren" ]
         [ h4 [ class "disableUserSelect m0 p1", onClick (ToggleSystem list) ] [ text list.path]
         , if list.isVisible
@@ -35,30 +34,30 @@ displayGameObject obj =
         [ h5 [ class "disableUserSelect m0 mb1 mt1", onClick (ToggleObject obj) ] [ text obj.name ]
         , if obj.isActive 
             then div []
-                [ displayGameObjectField obj.variables.strings (displayGameObjectFieldString obj)
-                , displayGameObjectField obj.variables.integers (displayGameObjectFieldInteger obj)
-                , displayGameObjectField obj.variables.floats (displayGameObjectFieldFloat obj)
-                , displayGameObjectField obj.variables.booleans (displayGameObjectFieldBool obj)
+                [ displayFieldList obj.variables.strings (displayFieldString obj)
+                , displayFieldList obj.variables.integers (displayFieldInteger obj)
+                , displayFieldList obj.variables.floats (displayFieldFloat obj)
+                , displayFieldList obj.variables.booleans (displayFieldBoolean obj)
                 , button [ class "pl1 pr1", onClick (BuildObject obj) ] [ text "Build" ]
                 ]
             else text ""
         ]
 
-displayGameObjectField : Maybe (List a) -> (a -> Html Msg) -> Html Msg
-displayGameObjectField maybeFields displayFunc =
+displayFieldList : Maybe (List a) -> (a -> Html Msg) -> Html Msg
+displayFieldList maybeFields displayFunc =
     case maybeFields of
         Nothing -> text ""
         Just list -> div [] (List.map displayFunc list)
 
-displayGameObjectFieldString : GameObject -> FieldString -> Html Msg
-displayGameObjectFieldString obj field =
+displayFieldString : GameObject -> FieldString -> Html Msg
+displayFieldString obj field =
     div [ class "clearfix" ]
         [ h5 [ class "col col-3 m0" ] [ text (field.pName ++ ": ") ]
         , input [ class "col col-9", value (getValueString field.pValue), onInput (UpdateStr field obj) ] []
         ]
 
-displayGameObjectFieldInteger : GameObject -> FieldInteger -> Html Msg
-displayGameObjectFieldInteger obj field =
+displayFieldInteger : GameObject -> FieldInteger -> Html Msg
+displayFieldInteger obj field =
     div [ class "clearfix" ]
         [ h5 [ class "col col-3 m0" ] [ text (field.pName ++ ": ") ]
         , input [ class "col col-7", value (getValueString field.pValue), onInput (UpdateInt field obj) ] []
@@ -66,8 +65,8 @@ displayGameObjectFieldInteger obj field =
         , button [ class "col col-1", onClick (IncrementInt field obj) ] [ text "+" ]
         ]
 
-displayGameObjectFieldFloat : GameObject -> FieldFloat -> Html Msg
-displayGameObjectFieldFloat obj field =
+displayFieldFloat : GameObject -> FieldFloat -> Html Msg
+displayFieldFloat obj field =
     div [ class "clearfix" ]
         [ h5 [ class "col col-3 m0" ] [ text (field.pName ++ ": ") ]
         , input [ class "col col-7", value (getValueString field.pValue), onInput (UpdateFloat field obj) ] []
@@ -75,8 +74,8 @@ displayGameObjectFieldFloat obj field =
         , button [ class "col col-1", onClick (IncrementFloat field obj) ] [ text "+" ]
         ]
 
-displayGameObjectFieldBool : GameObject -> FieldBool -> Html Msg
-displayGameObjectFieldBool obj field =
+displayFieldBoolean : GameObject -> FieldBool -> Html Msg
+displayFieldBoolean obj field =
     let checkedVal = case field.pValue of
         Nothing -> False
         Just val -> val

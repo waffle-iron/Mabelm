@@ -21,13 +21,12 @@ groupListsByPackage list =
 
 makeGamePackage : Int -> List GameObject -> GamePackage
 makeGamePackage index list =
-    let pathName =  case List.head list of
-        Nothing -> ""
-        Just head -> head.path in
-    (GamePackage list pathName True)
-
-
-
+    let 
+        (pathName, packageType) = case List.head list of
+            Nothing -> ("", Model_)
+            Just head -> (head.path, head.gameObjectType)
+    in
+    (GamePackage list pathName True packageType)
 
 --
 gamePackageDecoder : Decode.Decoder AllPackages
@@ -39,12 +38,13 @@ gamePackageDecoder =
 --
 gameObjectDecoder : Decode.Decoder GameObject
 gameObjectDecoder =
-    Decode.map5 GameObject
+    Decode.map6 GameObject
         (Decode.field "name" Decode.string)
         (Decode.field "path" Decode.string)
         (Decode.field "id" Decode.int)
         (Decode.field "variables" gameObjectAttrDecoder)
         (Decode.oneOf [Decode.field "isActive" Decode.bool, Decode.succeed True])
+        (Decode.field "type" (Decode.string |> Decode.andThen gameObjectTypeDecoder))
 --
 gameObjectAttrDecoder : Decode.Decoder GameObjectAttributes
 gameObjectAttrDecoder =
@@ -81,3 +81,11 @@ fieldFloatDecoder =
     Decode.map2 FieldFloat
         (Decode.field "pName" Decode.string)
         (Decode.field "pValue" (Decode.nullable Decode.float))
+
+gameObjectTypeDecoder : String -> Decode.Decoder GameObjectType
+gameObjectTypeDecoder tag =
+  case tag of
+    "Sprite" -> Decode.succeed Sprite
+    "Model" -> Decode.succeed Model_
+    "System" -> Decode.succeed System
+    _ -> Decode.fail (tag ++ " is not a recognized tag for Importance")

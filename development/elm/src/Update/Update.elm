@@ -49,6 +49,11 @@ update msg model =
                 | isUpdating = not model.isUpdating
             }, Cmd.none)
         ------------------------------------------------------------
+        ToggleAvailableObjects ->
+            ({model
+                | showsAvailableObjects = not model.showsAvailableObjects
+            }, Cmd.none)
+        ------------------------------------------------------------
         TogglePackageGroup packageGroup ->
             let 
                 setPackageList = case packageGroup.packageType of

@@ -12,6 +12,7 @@ type Msg
     | ToggleSystem GamePackage
     | TogglePackageGroup GamePackageGroup
     | ToggleObject GameObject
+    | ToggleAvailableObjects
 
     | IncrementInt FieldInteger GameObject
     | DecrementInt FieldInteger GameObject

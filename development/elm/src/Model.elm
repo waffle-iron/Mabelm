@@ -8,6 +8,8 @@ type alias Model =
     , systemPackages :Maybe GamePackageGroup
     , spritePackages :Maybe GamePackageGroup
     , currentID :Int
+    , showsAvailableObjects :Bool
+    , runningSystems : Maybe (List GameObject)
     }
 
 model : Model
@@ -19,6 +21,8 @@ model =
     , systemPackages = Nothing
     , spritePackages = Nothing
     , currentID = 0
+    , showsAvailableObjects = True
+    , runningSystems = Nothing
     }
 
 type alias GamePackageGroup =

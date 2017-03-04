@@ -202,6 +202,14 @@ update msg model =
         ------------------------------------------------------------
         AddModel obj ->
             (model, Cmd.none)
+        ------------------------------------------------------------
+        ClickTreeSprite spr ->
+            let
+                nSpr = {spr | isActive = not spr.isActive}
+            in
+            ({model
+                | root = nSpr
+            }, Cmd.none)
 
 
 updatePackage : GamePackage -> List GamePackage -> List GamePackage

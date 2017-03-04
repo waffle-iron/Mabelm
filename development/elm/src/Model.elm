@@ -31,6 +31,7 @@ model =
     , showsRunningSystems = True
     , runningSystems = []
     , root = rootSprite
+    , nextID = 1
     }
 
 rootSprite : GameSprite
@@ -45,6 +46,24 @@ rootSprite =
         , booleans = Nothing
         }
     , uniqueName = Just "root"
+    , isActive = False
+    , models = []
+    , children = (GameSpriteChildren [childSprite])
+    }
+
+childSprite : GameSprite
+childSprite =
+    { name = "SpriteChild"
+    , path = "cranberry.sprite"
+    , id = 0
+    , variables =
+        { integers = Nothing
+        , strings = Nothing
+        , floats = Nothing
+        , booleans = Nothing
+        }
+    , uniqueName = Just "root"
+    , isActive = False
     , models = []
     , children = (GameSpriteChildren [])
     }
@@ -59,8 +78,9 @@ type alias Model =
     , currentID :Int
     , showsAvailableObjects :Bool
     , showsRunningSystems :Bool
-    , runningSystems : List GameObject
+    , runningSystems :List GameObject
     , root : GameSprite
+    , nextID :Int
     }
 
 type alias GamePackageGroup =
@@ -135,19 +155,21 @@ type alias GameSprite =
     { name :String
     , path :String
     , id :Int
-    , variables : GameObjectAttributes
-    , uniqueName : Maybe String
-    , models : List GameModel
-    , children : GameSpriteChildren
+    , variables :GameObjectAttributes
+    , uniqueName :Maybe String
+    , isActive :Bool
+    , models :List GameModel
+    , children :GameSpriteChildren
     }
 
 type alias GameModel =
     { name :String
     , path :String
     , id :Int
-    , variables : GameObjectAttributes
-    , uniqueName : Maybe String
-    , systems : List GameSystem
+    , variables :GameObjectAttributes
+    , uniqueName :Maybe String
+    , isActive :Bool
+    , systems :List GameSystem
     }
 
 type RunningModels = RunningModels List GameModel
@@ -156,7 +178,8 @@ type alias GameSystem =
     { name :String
     , path :String
     , id :Int
-    , variables : GameObjectAttributes
-    , uniqueName : Maybe String
-    , models : RunningModels
+    , variables :GameObjectAttributes
+    , uniqueName :Maybe String
+    , isActive :Bool
+    , models :RunningModels
     }

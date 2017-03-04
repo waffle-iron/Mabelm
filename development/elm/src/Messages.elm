@@ -44,3 +44,4 @@ type Msg
     | AddSystem GameObject
     | AddSprite GameObject
     | AddModel GameObject
+    | ClickTreeSprite GameSprite

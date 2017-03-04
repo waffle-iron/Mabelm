@@ -18,19 +18,6 @@
 
 module Model exposing (..)
 
-type alias Model =
-    { isCompiling :Bool
-    , isRendering :Bool
-    , isUpdating :Bool
-    , modelPackages :Maybe GamePackageGroup
-    , systemPackages :Maybe GamePackageGroup
-    , spritePackages :Maybe GamePackageGroup
-    , currentID :Int
-    , showsAvailableObjects :Bool
-    , showsRunningSystems :Bool
-    , runningSystems : List GameObject
-    }
-
 model : Model
 model = 
     { isCompiling = False
@@ -43,6 +30,37 @@ model =
     , showsAvailableObjects = True
     , showsRunningSystems = True
     , runningSystems = []
+    , root = rootSprite
+    }
+
+rootSprite : GameSprite
+rootSprite =
+    { name = "Sprite"
+    , path = "cranberry.sprite"
+    , id = 0
+    , variables =
+        { integers = Nothing
+        , strings = Nothing
+        , floats = Nothing
+        , booleans = Nothing
+        }
+    , uniqueName = Just "root"
+    , models = []
+    , children = (GameSpriteChildren [])
+    }
+
+type alias Model =
+    { isCompiling :Bool
+    , isRendering :Bool
+    , isUpdating :Bool
+    , modelPackages :Maybe GamePackageGroup
+    , systemPackages :Maybe GamePackageGroup
+    , spritePackages :Maybe GamePackageGroup
+    , currentID :Int
+    , showsAvailableObjects :Bool
+    , showsRunningSystems :Bool
+    , runningSystems : List GameObject
+    , root : GameSprite
     }
 
 type alias GamePackageGroup =
@@ -111,7 +129,7 @@ type GameObjectType
     | System
     | Model_
 
-type GameSpriteChildren = GameSpriteChildren GameSprite
+type GameSpriteChildren = GameSpriteChildren (List GameSprite)
 
 type alias GameSprite =
     { name :String
@@ -120,7 +138,7 @@ type alias GameSprite =
     , variables : GameObjectAttributes
     , uniqueName : Maybe String
     , models : List GameModel
-    , children : Maybe GameSpriteChildren
+    , children : GameSpriteChildren
     }
 
 type alias GameModel =

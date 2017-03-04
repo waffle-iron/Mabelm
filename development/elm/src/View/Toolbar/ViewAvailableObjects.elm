@@ -29,10 +29,7 @@ import Model exposing (..)
 viewAvailableObjects : Model -> Html Msg
 viewAvailableObjects model =
     div [ class "border p1" ] 
-        [ h2 [ class "m0 disableUserSelect", onClick ToggleAvailableObjects ]
-            [ text "Available Objects"
-            ]
-        , if model.showsAvailableObjects
+        [ if model.showsAvailableObjects
             then
                 div []
                     [ case model.activeSprite of
@@ -40,10 +37,10 @@ viewAvailableObjects model =
                             text ""
                         Just spr ->
                             div []
-                                [ displayGamePackage "Sprites" "Add to Sprite" tempFunc AddSprite model.spritePackages
-                                , displayGamePackage "Models" "Add to Sprite" (filterAddedModels spr.models) AddModel model.modelPackages
+                                [ displayGamePackage "Available Sprites" "Add to Sprite" tempFunc AddSprite model.spritePackages
+                                , displayGamePackage "Available Models" "Add to Sprite" (filterAddedModels spr.models) AddModel model.modelPackages
                                 ]
-                    , displayGamePackage "Systems" "Add to Engine" tempFunc AddSystem model.systemPackages
+                    , displayGamePackage "Available Systems" "Add to Engine" tempFunc AddSystem model.systemPackages
                     ]
             else
                 text ""

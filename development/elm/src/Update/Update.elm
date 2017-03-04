@@ -198,18 +198,36 @@ update msg model =
             }, Cmd.none)
         ------------------------------------------------------------
         AddSprite obj ->
-            (model, Cmd.none)
+            case model.activeSprite of
+                Nothing ->
+                    (model, Cmd.none)
+                Just activeSpr ->
+                    let
+                        nSpr = {activeSpr
+                            | children = addChild activeSpr.children (createGameSprite model.nextID obj)
+                        }
+                    in
+                    ({model
+                        | root = DataUpdater.updateGameSprite nSpr model.root
+                        , nextID = model.nextID + 1
+                        , activeSprite = Just nSpr
+                    }, Cmd.none)
         ------------------------------------------------------------
         AddModel obj ->
             (model, Cmd.none)
         ------------------------------------------------------------
         ClickTreeSprite spr ->
             let
-                nSpr = {spr | isActive = not spr.isActive}
-                x = Debug.log("spr")"hi"
+                nIsActive = not spr.isActive
+                nRoot = case model.activeSprite of
+                    Nothing -> model.root
+                    Just aSpr ->
+                        DataUpdater.updateGameSprite {aSpr | isActive = False} model.root
+                nSpr = {spr | isActive = spr.isActive}
             in
             ({model
-                | root = DataUpdater.updateGameSprite nSpr model.root
+                | root = DataUpdater.updateGameSprite nSpr nRoot
+                , activeSprite = if nIsActive then Just nSpr else Nothing
             }, Cmd.none)
 
 
@@ -311,3 +329,7 @@ updateField field maybeFields =
             Nothing
         Just fields ->
             Just(ListExtra.replaceIf (\l -> l.pName == field.pName) field fields)
+
+addChild : GameSpriteChildren -> GameSprite -> GameSpriteChildren
+addChild (GameSpriteChildren children) nChild =
+    GameSpriteChildren(List.append children [nChild])

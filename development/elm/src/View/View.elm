@@ -39,7 +39,7 @@ view model =
             , viewAvailableObjects model
             ]
         , div [ id "gameTree", class "" ]
-            [ h2 [ class "m1 disableUserSelect" ]
+            [ h2 [ class "m0 disableUserSelect" ]
                 [ text "GameTree" ]
             , showSprite model.root
             ]
@@ -47,13 +47,13 @@ view model =
 
 showSprite : GameSprite -> Html Msg
 showSprite spr =
-    div [ class "inline-block" ]
-        [ span [ class "m0 disableUserSelect", onClick (ClickTreeSprite spr)  ]
+    let
+        className = if spr.isActive then "sprIsActive" else ""
+    in
+    div [ class "" ]
+        [ span [ class ("m0 disableUserSelect " ++ className), onClick (ClickTreeSprite spr)  ]
             [ text spr.name ]
-        , if spr.isActive 
-            then showSpriteActive spr
-            else text ""
-        , div [ class "clearfix" ]
+        , div []
             [ showSpriteChildren spr.children
             ]
         ]
@@ -62,15 +62,5 @@ showSpriteChildren : GameSpriteChildren -> Html Msg
 showSpriteChildren (GameSpriteChildren children) =
     div [ class "ml2" ]
         (List.map showSprite children)
-
-
-showSpriteActive : GameSprite -> Html Msg
-showSpriteActive spr =
-    div []
-        [ button []
-            [ text "Add Sprite" ]
-        , button []
-            [ text "Add Model" ]
-        ]  
                  
     

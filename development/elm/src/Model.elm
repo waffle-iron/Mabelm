@@ -32,6 +32,7 @@ model =
     , runningSystems = []
     , root = rootSprite
     , nextID = 1
+    , activeSprite = Nothing
     }
 
 rootSprite : GameSprite
@@ -39,23 +40,6 @@ rootSprite =
     { name = "Sprite"
     , path = "cranberry.sprite"
     , id = 0
-    , variables =
-        { integers = Nothing
-        , strings = Nothing
-        , floats = Nothing
-        , booleans = Nothing
-        }
-    , uniqueName = Just "root"
-    , isActive = False
-    , models = []
-    , children = (GameSpriteChildren [childSprite])
-    }
-
-childSprite : GameSprite
-childSprite =
-    { name = "SpriteChild"
-    , path = "cranberry.sprite"
-    , id = 1
     , variables =
         { integers = Nothing
         , strings = Nothing
@@ -81,6 +65,7 @@ type alias Model =
     , runningSystems :List GameObject
     , root : GameSprite
     , nextID :Int
+    , activeSprite : Maybe GameSprite
     }
 
 type alias GamePackageGroup =
@@ -182,4 +167,16 @@ type alias GameSystem =
     , uniqueName :Maybe String
     , isActive :Bool
     , models :RunningModels
+    }
+
+createGameSprite : Int -> GameObject -> GameSprite
+createGameSprite nextID obj =
+    { name = obj.name
+    , path = obj.path
+    , id = nextID
+    , variables = obj.variables
+    , uniqueName = obj.uniqueName
+    , isActive = False
+    , models = []
+    , children = (GameSpriteChildren [])
     }

@@ -35,9 +35,15 @@ viewAvailableObjects model =
         , if model.showsAvailableObjects
             then
                 div []
-                    [ displayGamePackage "Systems" "Add to Engine" AddSystem model.systemPackages
-                    , displayGamePackage "Models" "Add to Sprite" AddModel model.modelPackages
-                    , displayGamePackage "Sprites" "Add to Game" AddSprite model.spritePackages
+                    [ case model.activeSprite of
+                        Nothing -> 
+                            text ""
+                        Just spr ->
+                            div []
+                                [ displayGamePackage "Sprites" "Add to Sprite" AddSprite model.spritePackages
+                                , displayGamePackage "Models" "Add to Sprite" AddModel model.modelPackages
+                                ]
+                    , displayGamePackage "Systems" "Add to Engine" AddSystem model.systemPackages
                     ]
             else
                 text ""

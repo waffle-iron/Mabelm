@@ -18,7 +18,7 @@
 
 module View.View exposing (..)
 
-import Html exposing (Html, div, h2, h5, span, text, button)
+import Html exposing (Html, div, h2, p, h5, span, text, button)
 import Html.Attributes exposing (id, class)
 
 import Messages exposing (Msg(..))
@@ -47,15 +47,26 @@ view model =
 
 showSprite : GameSprite -> Html Msg
 showSprite spr =
-    let
-        className = if spr.isActive then "sprIsActive" else ""
-    in
-    div [ class "" ]
-        [ span [ class ("m0 disableUserSelect " ++ className), onClick (ClickTreeSprite spr)  ]
-            [ text spr.name ]
+    div []
+        [ if spr.isActive then showSpriteActive spr else showSpriteInActive spr
         , div []
             [ showSpriteChildren spr.children
             ]
+        ]
+
+showSpriteInActive : GameSprite -> Html Msg
+showSpriteInActive spr =
+    div [ class "pl1 inline-block" ]
+        [ p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr)  ]
+            [ text spr.name ]
+        ]
+
+showSpriteActive : GameSprite -> Html Msg
+showSpriteActive spr =
+    div [ class "p1 border inline-block" ]
+        [ p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr)  ]
+            [ text spr.name ]
+        , showModels spr.models
         ]
 
 showSpriteChildren : GameSpriteChildren -> Html Msg
@@ -63,4 +74,23 @@ showSpriteChildren (GameSpriteChildren children) =
     div [ class "ml2" ]
         (List.map showSprite children)
                  
-    
+showModels : List GameModel -> Html Msg
+showModels models =
+    div [ class "border p1" ]
+        (List.map showModel models)
+
+showModel : GameModel -> Html Msg
+showModel model =
+    p [ class "m0" ]
+        [ text model.name ]
+
+
+-- type alias GameModel =
+--     { name :String
+--     , path :String
+--     , id :Int
+--     , variables :GameObjectAttributes
+--     , uniqueName :Maybe String
+--     , isActive :Bool
+--     , systems :List GameSystem
+--     }

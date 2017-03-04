@@ -18,16 +18,13 @@
 
 port module Update.Update exposing (update)
 
-import Json.Encode as Encode
 import Util.DataUpdater as DataUpdater
 import Messages exposing (Msg(..))
 import Model as Model exposing (..)
 import Decoder.Decoder exposing (getDataLists)
 import List.Extra as ListExtra
-import Encoder.Encoder as Encoder
 
 port startCompile : String -> Cmd msg
-port addModel : Encode.Value -> Cmd msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -187,7 +184,7 @@ update msg model =
             (setPackageList model (DataUpdater.updateGameObject nObj packageList), Cmd.none)
         ------------------------------------------------------------
         BuildObject obj ->
-            (model, (addModel (Encoder.objToValue obj)))
+            (model, Cmd.none)
         ------------------------------------------------------------
         AddSystem obj ->
             let
@@ -214,7 +211,20 @@ update msg model =
                     }, Cmd.none)
         ------------------------------------------------------------
         AddModel obj ->
-            (model, Cmd.none)
+            case model.activeSprite of
+                Nothing ->
+                    (model, Cmd.none)
+                Just activeSpr ->
+                    let
+                        nSpr = {activeSpr
+                            | models = addModel activeSpr.models (createGameModel model.nextID obj)
+                        }
+                    in
+                    ({model
+                        | root = DataUpdater.updateGameSprite False nSpr model.root
+                        , nextID = model.nextID + 1
+                        , activeSprite = Just nSpr
+                    }, Cmd.none)
         ------------------------------------------------------------
         ClickTreeSprite spr ->
             let
@@ -333,3 +343,7 @@ updateField field maybeFields =
 addChild : GameSpriteChildren -> GameSprite -> GameSpriteChildren
 addChild (GameSpriteChildren children) nChild =
     GameSpriteChildren(List.append children [nChild])
+
+addModel : (List GameModel) -> GameModel -> (List GameModel)
+addModel models gModel =
+    List.append models [gModel]

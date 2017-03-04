@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
-module View.Toolbar.ViewAvailableObjects exposing (viewAvailableObjects)
+module View.Toolbar.ViewAvailableObjects exposing (..)
 
 import Html exposing (Html, div, h2, h3, h4, h5, text, p, input, button)
 import Html.Attributes exposing (id, class, type_, checked, value)

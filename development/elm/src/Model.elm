@@ -180,3 +180,14 @@ createGameSprite nextID obj =
     , models = []
     , children = (GameSpriteChildren [])
     }
+
+createGameModel : Int -> GameObject -> GameModel
+createGameModel nextID obj =
+    { name = obj.name
+    , path = obj.path
+    , id = nextID
+    , variables = obj.variables
+    , uniqueName = obj.uniqueName
+    , isActive = False
+    , systems = []
+    }

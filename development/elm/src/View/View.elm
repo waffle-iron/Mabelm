@@ -18,7 +18,7 @@
 
 module View.View exposing (..)
 
-import Html exposing (Html, div, h2, p, h5, span, text, button)
+import Html exposing (Html, div, h2, p, h5, span, text, button, select, option)
 import Html.Attributes exposing (id, class)
 
 import Messages exposing (Msg(..))
@@ -41,16 +41,16 @@ view model =
         , div [ id "gameTree", class "" ]
             [ h2 [ class "m0 disableUserSelect" ]
                 [ text "GameTree" ]
-            , showSprite model.root
+            , showSprite model.runningSystems model.root
             ]
         ]
 
-showSprite : GameSprite -> Html Msg
-showSprite spr =
+showSprite : List GameObject -> GameSprite -> Html Msg
+showSprite runningSystems spr =
     div []
-        [ if spr.isActive then showSpriteActive spr else showSpriteInActive spr
+        [ if spr.isActive then showSpriteActive runningSystems spr else showSpriteInActive spr
         , div []
-            [ showSpriteChildren spr.children
+            [ showSpriteChildren runningSystems spr.children
             ]
         ]
 
@@ -61,28 +61,39 @@ showSpriteInActive spr =
             [ text spr.name ]
         ]
 
-showSpriteActive : GameSprite -> Html Msg
-showSpriteActive spr =
+showSpriteActive : List GameObject -> GameSprite -> Html Msg
+showSpriteActive runningSystems spr =
     div [ class "p1 border inline-block" ]
         [ p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr)  ]
             [ text spr.name ]
-        , showModels spr.models
+        , showModels runningSystems spr.models
         ]
 
-showSpriteChildren : GameSpriteChildren -> Html Msg
-showSpriteChildren (GameSpriteChildren children) =
+showSpriteChildren : List GameObject -> GameSpriteChildren -> Html Msg
+showSpriteChildren runningSystems (GameSpriteChildren children) =
     div [ class "ml2" ]
-        (List.map showSprite children)
+        (List.map (showSprite runningSystems) children)
                  
-showModels : List GameModel -> Html Msg
-showModels models =
+showModels : List GameObject -> List GameModel -> Html Msg
+showModels runningSystems models =
     div [ class "border p1" ]
-        (List.map showModel models)
+        (List.map (showModel runningSystems) models)
 
-showModel : GameModel -> Html Msg
-showModel model =
-    p [ class "m0" ]
-        [ text model.name ]
+showModel : List GameObject -> GameModel -> Html Msg
+showModel runningSystems model =
+    div []
+        [ p [ class "m0" ]
+            [ text model.name ]
+        , select []
+            (List.map showSystemOption runningSystems)
+        ]
+
+showSystemOption : GameObject -> Html Msg
+showSystemOption obj =
+    option []
+        [ text obj.name 
+        ]
+
 
 
 -- type alias GameModel =

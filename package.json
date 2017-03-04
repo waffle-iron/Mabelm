@@ -1,13 +1,13 @@
 {
-  "name": "shrub_front",
+  "name": "mabelm",
   "version": "0.0.1",
-  "description": "Shrub Front end",
+  "description": "Game framework front end written in elm",
   "main": "index.js",
   "scripts": {
     "dev": "gulp"
   },
   "author": "Jeremy Meltingtallow",
-  "license": "ISC",
+  "license": "GPL-3.0",
   "devDependencies": {
     "browser-sync": "^2.17.3",
     "gulp": "^3.9.1",

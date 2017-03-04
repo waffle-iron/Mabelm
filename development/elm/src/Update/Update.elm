@@ -206,9 +206,10 @@ update msg model =
         ClickTreeSprite spr ->
             let
                 nSpr = {spr | isActive = not spr.isActive}
+                x = Debug.log("spr")"hi"
             in
             ({model
-                | root = nSpr
+                | root = DataUpdater.updateGameSprite nSpr model.root
             }, Cmd.none)
 
 

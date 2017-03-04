@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
-module Util.DataUpdater exposing (updateGameObject)
+module Util.DataUpdater exposing (updateGameObject, updateGameSprite)
 
 import Model exposing (..)
 
@@ -42,3 +42,15 @@ updateObj newObj obj =
         newObj
     else
         obj
+
+
+updateGameSprite : GameSprite -> GameSprite -> GameSprite
+updateGameSprite newGameSpr rootGameSpr =
+    if newGameSpr.id == rootGameSpr.id then
+        newGameSpr
+    else
+        {rootGameSpr | children = updateGameSpriteChildren newGameSpr rootGameSpr.children}
+
+updateGameSpriteChildren : GameSprite -> GameSpriteChildren -> GameSpriteChildren
+updateGameSpriteChildren newGameSpr (GameSpriteChildren children) =
+    GameSpriteChildren(List.map (updateGameSprite newGameSpr) children)

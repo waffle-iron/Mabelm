@@ -18,7 +18,7 @@
 
 module View.View exposing (..)
 
-import Html exposing (Html, div, h2, h5, text, button)
+import Html exposing (Html, div, h2, h5, span, text, button)
 import Html.Attributes exposing (id, class)
 
 import Messages exposing (Msg(..))
@@ -47,13 +47,22 @@ view model =
 
 showSprite : GameSprite -> Html Msg
 showSprite spr =
-    div [ class "border inline-block p1" ]
-        [ h5 [ class "m0 disableUserSelect", onClick (ClickTreeSprite spr)  ]
+    div [ class "inline-block" ]
+        [ span [ class "m0 disableUserSelect", onClick (ClickTreeSprite spr)  ]
             [ text spr.name ]
         , if spr.isActive 
             then showSpriteActive spr
             else text ""
+        , div [ class "clearfix" ]
+            [ showSpriteChildren spr.children
+            ]
         ]
+
+showSpriteChildren : GameSpriteChildren -> Html Msg
+showSpriteChildren (GameSpriteChildren children) =
+    div [ class "ml2" ]
+        (List.map showSprite children)
+
 
 showSpriteActive : GameSprite -> Html Msg
 showSpriteActive spr =
@@ -64,3 +73,4 @@ showSpriteActive spr =
             [ text "Add Model" ]
         ]  
                  
+    

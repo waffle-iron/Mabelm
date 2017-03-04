@@ -55,7 +55,7 @@ childSprite : GameSprite
 childSprite =
     { name = "SpriteChild"
     , path = "cranberry.sprite"
-    , id = 0
+    , id = 1
     , variables =
         { integers = Nothing
         , strings = Nothing

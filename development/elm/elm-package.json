@@ -1,7 +1,7 @@
 {
     "version": "0.0.1",
-    "summary": "",
-    "repository": "",
+    "summary": "Game framework front end written in elm",
+    "repository": "http://github.com/sourcreme/mabelm.git",
     "license": "GPL-3.0",
     "source-directories": [
         "src"

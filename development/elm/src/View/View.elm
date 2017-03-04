@@ -38,4 +38,7 @@ view model =
             [ viewActiveSystems model
             , viewAvailableObjects model
             ]
+        , div [ id "gameTree", class "" ]
+            [
+            ]
         ]

@@ -40,17 +40,17 @@ viewAvailableObjects model =
                             text ""
                         Just spr ->
                             div []
-                                [ displayGamePackage "Sprites" "Add to Sprite" AddSprite model.spritePackages
-                                , displayGamePackage "Models" "Add to Sprite" AddModel model.modelPackages
+                                [ displayGamePackage "Sprites" "Add to Sprite" tempFunc AddSprite model.spritePackages
+                                , displayGamePackage "Models" "Add to Sprite" (filterAddedModels spr.models) AddModel model.modelPackages
                                 ]
-                    , displayGamePackage "Systems" "Add to Engine" AddSystem model.systemPackages
+                    , displayGamePackage "Systems" "Add to Engine" tempFunc AddSystem model.systemPackages
                     ]
             else
                 text ""
         ]
 
-displayGamePackage : String -> String -> (GameObject -> Msg) -> (Maybe GamePackageGroup) -> Html Msg
-displayGamePackage title buttonText msg maybeGroupPackage =
+displayGamePackage : String -> String -> (GameObject -> Bool) -> (GameObject -> Msg) -> (Maybe GamePackageGroup) -> Html Msg
+displayGamePackage title buttonText funcShow msg maybeGroupPackage =
     case maybeGroupPackage of
         Nothing ->
             text ""
@@ -58,16 +58,16 @@ displayGamePackage title buttonText msg maybeGroupPackage =
             div []
                 [ h3 [ onClick (TogglePackageGroup group), class "disableUserSelect" ] [ text title ]
                 , if group.isVisible
-                    then div [] (List.map (displayListOfGameObjects buttonText msg) group.packages)
+                    then div [] (List.map (displayListOfGameObjects buttonText funcShow msg) group.packages)
                     else text ""
                 ]
 
-displayListOfGameObjects : String -> (GameObject -> Msg) -> GamePackage -> Html Msg
-displayListOfGameObjects buttonText msg list =
+displayListOfGameObjects : String -> (GameObject -> Bool) -> (GameObject -> Msg) -> GamePackage -> Html Msg
+displayListOfGameObjects buttonText funcShow msg list =
     div [ class "gameObjectChildren" ]
         [ h4 [ class "disableUserSelect m0 p1", onClick (ToggleSystem list) ] [ text list.path]
         , if list.isVisible
-            then div [] (List.map (displayGameObject buttonText msg) list.objects)
+            then div [] (List.map (displayGameObject buttonText msg) (List.filter funcShow list.objects))
             else text ""
         ]
 
@@ -133,3 +133,11 @@ getValueString maybeVal =
     case maybeVal of
         Nothing -> ""
         Just val -> StringExtra.unquote (toString val)
+
+tempFunc : GameObject -> Bool
+tempFunc obj =
+    True
+
+filterAddedModels : List GameModel -> GameObject -> Bool
+filterAddedModels models obj =
+    List.all (\n -> not(n.name == obj.name && n.path == obj.path)) models

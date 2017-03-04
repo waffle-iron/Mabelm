@@ -157,7 +157,7 @@ type alias GameModel =
     , systems :List GameSystem
     }
 
-type RunningModels = RunningModels List GameModel
+type RunningModels = RunningModels (List GameModel)
 
 type alias GameSystem =
     { name :String

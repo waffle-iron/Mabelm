@@ -1,0 +1,68 @@
+<!--
+	Mabelm 
+	Copyright (C) 2017  Jeremy Meltingtallow
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>gui</title>
+
+		<link rel="stylesheet" href="./css/ace.min.css">
+		<link rel="stylesheet" href="./css/entryPoint.css">
+	</head>
+
+	<body>
+		<div id="gui"></div>
+
+		<script src="./js/elm.js"></script>
+		<script type="text/javascript">
+			function loadJSON(callback) {
+				var xobj = new XMLHttpRequest();
+				xobj.overrideMimeType("application/json");
+				xobj.open('GET', 'data/data.json', true);
+				xobj.onreadystatechange = function() {
+					if (xobj.readyState == 4 && xobj.status == "200") {
+						callback(xobj.responseText);
+					}
+				};
+				xobj.send(null);
+			}
+
+			var mountNode = document.getElementById('gui');
+			var app = Elm.Main.embed(mountNode);
+
+			app.ports.requestData.subscribe(function(_) {
+				loadJSON(function(response) {
+					app.ports.loadData.send(response);
+				});
+			});
+
+			app.ports.addModel.subscribe(function(model) {
+				console.log(model);
+			});
+		</script>
+
+		<script>
+			
+
+			
+		</script>
+	</body>
+</html>

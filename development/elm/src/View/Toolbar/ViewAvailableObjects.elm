@@ -1,4 +1,4 @@
-module View.Toolbar.AvailableObjects exposing (availableObjects)
+module View.Toolbar.ViewAvailableObjects exposing (viewAvailableObjects)
 
 import Html exposing (Html, div, h2, h3, h4, h5, text, p, input, button)
 import Html.Attributes exposing (id, class, type_, checked, value)
@@ -8,8 +8,8 @@ import String.Extra as StringExtra
 import Messages exposing (Msg(..))
 import Model exposing (..)
 
-availableObjects : Model -> Html Msg
-availableObjects model =
+viewAvailableObjects : Model -> Html Msg
+viewAvailableObjects model =
     div [ class "border p1" ] 
         [ h2 [ class "m0 disableUserSelect", onClick ToggleAvailableObjects ]
             [ text "Available Objects"

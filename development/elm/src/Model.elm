@@ -9,7 +9,8 @@ type alias Model =
     , spritePackages :Maybe GamePackageGroup
     , currentID :Int
     , showsAvailableObjects :Bool
-    , runningSystems : Maybe (List GameObject)
+    , showsRunningSystems :Bool
+    , runningSystems : List GameObject
     }
 
 model : Model
@@ -22,7 +23,8 @@ model =
     , spritePackages = Nothing
     , currentID = 0
     , showsAvailableObjects = True
-    , runningSystems = Nothing
+    , showsRunningSystems = True
+    , runningSystems = []
     }
 
 type alias GamePackageGroup =
@@ -43,6 +45,7 @@ type alias GameObject =
     , path :String
     , id :Int
     , variables : GameObjectAttributes
+    , uniqueName : Maybe String
     , isActive :Bool
     , gameObjectType :GameObjectType
     }

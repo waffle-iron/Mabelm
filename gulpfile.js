@@ -6,7 +6,8 @@ var browserSync = require('browser-sync').create();
 gulp.task('buildElm', function (cb) {
 	var gotoElmDir = 'cd ./development/elm';
 	var and = "&&";
-	var makeElmJS = 'elm-make src/Main.elm --output=elm.js --debug';
+	//var makeElmJS = 'elm-make src/Main.elm --output=elm.js --debug';
+	var makeElmJS = 'elm-make src/Main.elm --output=elm.js';
 	var moveFile = 'mv elm.js ../../public/js/'
 
 	exec(gotoElmDir + and + makeElmJS + and + moveFile, function (err, stdout, stderr) {

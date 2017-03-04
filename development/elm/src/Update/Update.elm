@@ -54,6 +54,11 @@ update msg model =
                 | showsAvailableObjects = not model.showsAvailableObjects
             }, Cmd.none)
         ------------------------------------------------------------
+        ToggleRunningSystems ->
+            ({model
+                | showsRunningSystems = not model.showsRunningSystems
+            }, Cmd.none)
+        ------------------------------------------------------------
         TogglePackageGroup packageGroup ->
             let 
                 setPackageList = case packageGroup.packageType of
@@ -166,15 +171,24 @@ update msg model =
         BuildObject obj ->
             (model, (addModel (Encoder.objToValue obj)))
         ------------------------------------------------------------
-        ChangeVal field obj ->
+        AddSystem obj ->
+            let
+                runningSystems = List.append model.runningSystems [obj]
+            in
+            ({model
+                | runningSystems = runningSystems
+            }, Cmd.none)
+        ------------------------------------------------------------
+        AddSprite obj ->
             (model, Cmd.none)
-
+        ------------------------------------------------------------
+        AddModel obj ->
+            (model, Cmd.none)
 
 
 updatePackage : GamePackage -> List GamePackage -> List GamePackage
 updatePackage tappedList gamePackage =
     ListExtra.replaceIf (\l -> l.path == tappedList.path) tappedList gamePackage
-
 
 updatePackageGroup : GamePackage -> Maybe GamePackageGroup -> Maybe GamePackageGroup
 updatePackageGroup tappedList maybePackageGroup =
@@ -193,10 +207,6 @@ setSpritePackageList model maybePackages =
 setSystemPackageList : Model -> (Maybe GamePackageGroup) -> Model
 setSystemPackageList model maybePackages = 
     { model | systemPackages = maybePackages }
-
-            
-
-
 
 incrementDecrementObjInt : FieldInteger -> GameObject -> (Int -> Int -> Int) -> GameObject
 incrementDecrementObjInt fieldInt obj operation =

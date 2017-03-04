@@ -11,22 +11,22 @@ import Model exposing (..)
 availableObjects : Model -> Html Msg
 availableObjects model =
     div [ class "border p1" ] 
-        [ h2 [ class "m0", onClick ToggleAvailableObjects ]
+        [ h2 [ class "m0 disableUserSelect", onClick ToggleAvailableObjects ]
             [ text "Available Objects"
             ]
         , if model.showsAvailableObjects
             then
                 div []
-                    [ displayGamePackage "Systems" "Add to Engine" model.systemPackages
-                    , displayGamePackage "Models" "Add to Sprite" model.modelPackages
-                    , displayGamePackage "Sprites" "Add to Game" model.spritePackages
+                    [ displayGamePackage "Systems" "Add to Engine" AddSystem model.systemPackages
+                    , displayGamePackage "Models" "Add to Sprite" AddModel model.modelPackages
+                    , displayGamePackage "Sprites" "Add to Game" AddSprite model.spritePackages
                     ]
             else
                 text ""
         ]
 
-displayGamePackage : String -> String -> (Maybe GamePackageGroup) -> Html Msg
-displayGamePackage title buttonText maybeGroupPackage =
+displayGamePackage : String -> String -> (GameObject -> Msg) -> (Maybe GamePackageGroup) -> Html Msg
+displayGamePackage title buttonText msg maybeGroupPackage =
     case maybeGroupPackage of
         Nothing ->
             text ""
@@ -34,21 +34,21 @@ displayGamePackage title buttonText maybeGroupPackage =
             div []
                 [ h3 [ onClick (TogglePackageGroup group), class "disableUserSelect" ] [ text title ]
                 , if group.isVisible
-                    then div [] (List.map (displayListOfGameObjects buttonText) group.packages)
+                    then div [] (List.map (displayListOfGameObjects buttonText msg) group.packages)
                     else text ""
                 ]
 
-displayListOfGameObjects : String -> GamePackage -> Html Msg
-displayListOfGameObjects buttonText list =
+displayListOfGameObjects : String -> (GameObject -> Msg) -> GamePackage -> Html Msg
+displayListOfGameObjects buttonText msg list =
     div [ class "gameObjectChildren" ]
         [ h4 [ class "disableUserSelect m0 p1", onClick (ToggleSystem list) ] [ text list.path]
         , if list.isVisible
-            then div [] (List.map (displayGameObject buttonText) list.objects)
+            then div [] (List.map (displayGameObject buttonText msg) list.objects)
             else text ""
         ]
 
-displayGameObject : String -> GameObject -> Html Msg
-displayGameObject buttonText obj =
+displayGameObject : String -> (GameObject -> Msg) -> GameObject -> Html Msg
+displayGameObject buttonText msg obj =
     div [ class "gameObject border p1" ]
         [ h5 [ class "disableUserSelect m0 mb1 mt1", onClick (ToggleObject obj) ] [ text obj.name ]
         , if obj.isActive 
@@ -57,7 +57,7 @@ displayGameObject buttonText obj =
                 , displayFieldList obj.variables.integers (displayFieldInteger obj)
                 , displayFieldList obj.variables.floats (displayFieldFloat obj)
                 , displayFieldList obj.variables.booleans (displayFieldBoolean obj)
-                , button [ class "pl1 pr1", onClick (BuildObject obj) ] [ text buttonText ]
+                , button [ class "pl1 pr1", onClick (msg obj) ] [ text buttonText ]
                 ]
             else text ""
         ]
@@ -71,14 +71,14 @@ displayFieldList maybeFields displayFunc =
 displayFieldString : GameObject -> FieldString -> Html Msg
 displayFieldString obj field =
     div [ class "clearfix" ]
-        [ h5 [ class "col col-5 m0 right-align pr1" ] [ text (field.pName ++ ": ") ]
+        [ h5 [ class "col col-5 m0 right-align pr1 disableUserSelect" ] [ text (field.pName ++ ": ") ]
         , input [ class "col col-7", value (getValueString field.pValue), onInput (UpdateStr field obj) ] []
         ]
 
 displayFieldInteger : GameObject -> FieldInteger -> Html Msg
 displayFieldInteger obj field =
     div [ class "clearfix" ]
-        [ h5 [ class "col col-5 m0 right-align pr1" ] [ text (field.pName ++ ": ") ]
+        [ h5 [ class "col col-5 m0 right-align pr1 disableUserSelect" ] [ text (field.pName ++ ": ") ]
         , input [ class "col col-5", value (getValueString field.pValue), onInput (UpdateInt field obj) ] []
         , button [ class "col col-1", onClick (DecrementInt field obj) ] [ text "-" ]
         , button [ class "col col-1", onClick (IncrementInt field obj) ] [ text "+" ]
@@ -87,7 +87,7 @@ displayFieldInteger obj field =
 displayFieldFloat : GameObject -> FieldFloat -> Html Msg
 displayFieldFloat obj field =
     div [ class "clearfix" ]
-        [ h5 [ class "col col-5 m0 right-align pr1" ] [ text (field.pName ++ ": ") ]
+        [ h5 [ class "col col-5 m0 right-align pr1 disableUserSelect" ] [ text (field.pName ++ ": ") ]
         , input [ class "col col-5", value (getValueString field.pValue), onInput (UpdateFloat field obj) ] []
         , button [ class "col col-1", onClick (DecrementFloat field obj) ] [ text "-" ]
         , button [ class "col col-1", onClick (IncrementFloat field obj) ] [ text "+" ]
@@ -100,7 +100,7 @@ displayFieldBoolean obj field =
         Just val -> val
     in
     div [ class "clearfix" ]
-        [ h5 [ class "col col-5 m0 right-align pr1" ] [ text (field.pName ++ ": ") ]
+        [ h5 [ class "col col-5 m0 right-align pr1 disableUserSelect" ] [ text (field.pName ++ ": ") ]
         , input [ type_ "checkbox", checked checkedVal, onClick (ToggleBool field obj) ] []
         ]
 

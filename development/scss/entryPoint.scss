@@ -1,20 +1,3 @@
-
-$toolbarWidth: 90px;
-
-$toolbar__buttonWidth: $toolbarWidth;
-$toolbar__buttonHeight: $toolbarWidth;
-$boxShadow: 0px 0px 49px -15px rgba(0,0,0,0.22);
-
-$transitionAttr: all 2.1s ease-in;
-
-$toolbar__buttonStroke: 3px;
-
-body, html {
-	width: 100vw;
-	height: 100vh;
-	overflow: hidden;
-	color: #555;
-}
 /*
     Mabelm 
     Copyright (C) 2017  Jeremy Meltingtallow
@@ -33,6 +16,25 @@ body, html {
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
+$toolbarWidth: 90px;
+
+$toolbar__buttonWidth: $toolbarWidth;
+$toolbar__buttonHeight: $toolbarWidth;
+$boxShadow: 0px 0px 49px -15px rgba(0,0,0,0.22);
+
+$transitionAttr: all 2.1s ease-in;
+
+$toolbar__buttonStroke: 3px;
+
+$gameTree__width: 800px;
+
+body, html {
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	color: #555;
+}
 
 .toolbar {
 	top: 0;
@@ -54,9 +56,20 @@ body, html {
 	z-index: 1;
 }
 
-#gamePackageContainers {
+#gameTree {
 	top: 0;
 	right: 0;
+	position: absolute;
+	width: $gameTree__width;
+	height: 100vh;
+	z-index: 2;
+	box-shadow: $boxShadow;
+	overflow: auto;
+}
+
+#gamePackageContainers {
+	top: 0;
+	right: $gameTree__width;
 	position: absolute;
 	width: 300px;
 	height: 100vh;

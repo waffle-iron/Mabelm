@@ -39,6 +39,7 @@ view model =
             , viewAvailableObjects model
             ]
         , div [ id "gameTree", class "" ]
-            [
+            [ h2 [ class "m1" ]
+                [ text "GameTree" ]
             ]
         ]

@@ -110,3 +110,35 @@ type GameObjectType
     = Sprite
     | System
     | Model_
+
+type GameSpriteChildren = GameSpriteChildren GameSprite
+
+type alias GameSprite =
+    { name :String
+    , path :String
+    , id :Int
+    , variables : GameObjectAttributes
+    , uniqueName : Maybe String
+    , models : List GameModel
+    , children : Maybe GameSpriteChildren
+    }
+
+type alias GameModel =
+    { name :String
+    , path :String
+    , id :Int
+    , variables : GameObjectAttributes
+    , uniqueName : Maybe String
+    , systems : List GameSystem
+    }
+
+type RunningModels = RunningModels List GameModel
+
+type alias GameSystem =
+    { name :String
+    , path :String
+    , id :Int
+    , variables : GameObjectAttributes
+    , uniqueName : Maybe String
+    , models : RunningModels
+    }

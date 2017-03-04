@@ -224,13 +224,10 @@ update msg model =
                     Just aSpr ->
                         DataUpdater.updateGameSprite True {aSpr | isActive = False} model.root
                 nSpr = {spr | isActive = nIsActive}
-                nnSpr = if nSpr.id == nRoot.id
-                    then {nSpr | children = nRoot.children}
-                    else nSpr
             in
             ({model
-                | root = DataUpdater.updateGameSprite True nnSpr nRoot
-                , activeSprite = if nIsActive then Just nnSpr else Nothing
+                | root = DataUpdater.updateGameSprite True nSpr nRoot
+                , activeSprite = if nIsActive then Just nSpr else Nothing
             }, Cmd.none)
 
 

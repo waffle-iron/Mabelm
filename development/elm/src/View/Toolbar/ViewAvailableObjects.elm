@@ -61,12 +61,19 @@ displayGamePackage title buttonText funcShow msg maybeGroupPackage =
 
 displayListOfGameObjects : String -> (GameObject -> Bool) -> (GameObject -> Msg) -> GamePackage -> Html Msg
 displayListOfGameObjects buttonText funcShow msg list =
-    div [ class "gameObjectChildren" ]
-        [ h4 [ class "disableUserSelect m0 p1", onClick (ToggleSystem list) ] [ text list.path]
-        , if list.isVisible
-            then div [] (List.map (displayGameObject buttonText msg) (List.filter funcShow list.objects))
-            else text ""
-        ]
+    let 
+        nList = List.filter funcShow list.objects
+    in
+    if List.length nList == 0
+        then 
+            text ""
+        else
+            div [ class "gameObjectChildren" ]
+                [ h4 [ class "disableUserSelect m0 p1", onClick (ToggleSystem list) ] [ text list.path]
+                , if list.isVisible
+                    then div [] (List.map (displayGameObject buttonText msg) nList)
+                    else text ""
+                ]
 
 displayGameObject : String -> (GameObject -> Msg) -> GameObject -> Html Msg
 displayGameObject buttonText msg obj =

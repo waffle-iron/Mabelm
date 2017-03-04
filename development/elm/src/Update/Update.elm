@@ -208,7 +208,7 @@ update msg model =
                         }
                     in
                     ({model
-                        | root = DataUpdater.updateGameSprite nSpr model.root
+                        | root = DataUpdater.updateGameSprite False nSpr model.root
                         , nextID = model.nextID + 1
                         , activeSprite = Just nSpr
                     }, Cmd.none)
@@ -222,12 +222,15 @@ update msg model =
                 nRoot = case model.activeSprite of
                     Nothing -> model.root
                     Just aSpr ->
-                        DataUpdater.updateGameSprite {aSpr | isActive = False} model.root
-                nSpr = {spr | isActive = spr.isActive}
+                        DataUpdater.updateGameSprite True {aSpr | isActive = False} model.root
+                nSpr = {spr | isActive = nIsActive}
+                nnSpr = if nSpr.id == nRoot.id
+                    then {nSpr | children = nRoot.children}
+                    else nSpr
             in
             ({model
-                | root = DataUpdater.updateGameSprite nSpr nRoot
-                , activeSprite = if nIsActive then Just nSpr else Nothing
+                | root = DataUpdater.updateGameSprite True nnSpr nRoot
+                , activeSprite = if nIsActive then Just nnSpr else Nothing
             }, Cmd.none)
 
 

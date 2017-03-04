@@ -44,13 +44,15 @@ updateObj newObj obj =
         obj
 
 
-updateGameSprite : GameSprite -> GameSprite -> GameSprite
-updateGameSprite newGameSpr rootGameSpr =
+updateGameSprite : Bool -> GameSprite -> GameSprite -> GameSprite
+updateGameSprite addOldChildren newGameSpr rootGameSpr =
     if newGameSpr.id == rootGameSpr.id then
-        newGameSpr
+        if addOldChildren
+            then {newGameSpr | children = rootGameSpr.children}
+            else newGameSpr
     else
-        {rootGameSpr | children = updateGameSpriteChildren newGameSpr rootGameSpr.children}
+        {rootGameSpr | children = updateGameSpriteChildren addOldChildren newGameSpr rootGameSpr.children}
 
-updateGameSpriteChildren : GameSprite -> GameSpriteChildren -> GameSpriteChildren
-updateGameSpriteChildren newGameSpr (GameSpriteChildren children) =
-    GameSpriteChildren(List.map (updateGameSprite newGameSpr) children)
+updateGameSpriteChildren : Bool -> GameSprite -> GameSpriteChildren -> GameSpriteChildren
+updateGameSpriteChildren addOldChildren newGameSpr (GameSpriteChildren children) =
+    GameSpriteChildren(List.map (updateGameSprite addOldChildren newGameSpr) children)

@@ -48,8 +48,24 @@ rootSprite =
         }
     , uniqueName = Just "root"
     , isActive = False
-    , models = []
+    , models = [gameModel]
     , children = (GameSpriteChildren [])
+    }
+
+gameModel : GameModel
+gameModel =
+    { name = "yeah"
+    , path = "yeah.ham.gross"
+    , id = 300
+    , variables =
+        { integers = Nothing
+        , strings = Nothing
+        , floats = Nothing
+        , booleans = Nothing
+        }
+    , uniqueName = Nothing
+    , isActive = False
+    , systems = []
     }
 
 type alias Model =

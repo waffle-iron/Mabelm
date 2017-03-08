@@ -45,3 +45,4 @@ type Msg
     | AddSprite GameObject
     | AddModel GameObject
     | ClickTreeSprite GameSprite
+    | ToggleModel GameSprite GameModel

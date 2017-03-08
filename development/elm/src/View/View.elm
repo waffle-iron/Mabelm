@@ -29,6 +29,9 @@ import View.Toolbar.ViewActiveSystems exposing (viewActiveSystems)
 import View.GameWindow.ViewGameWindow exposing (gameWindow)
 import Html.Events exposing (onClick)
 
+import Material.Icons.Editor exposing (mode_edit)
+import Color as Color
+
 view : Model -> Html Msg
 view model =
     div []
@@ -66,7 +69,7 @@ showSpriteActive runningSystems spr =
     div [ class "p1 border inline-block" ]
         [ p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr)  ]
             [ text spr.name ]
-        , showModels runningSystems spr.models
+        , showModels spr runningSystems spr.models
         ]
 
 showSpriteChildren : List GameObject -> GameSpriteChildren -> Html Msg
@@ -74,16 +77,25 @@ showSpriteChildren runningSystems (GameSpriteChildren children) =
     div [ class "ml2" ]
         (List.map (showSprite runningSystems) children)
                  
-showModels : List GameObject -> List GameModel -> Html Msg
-showModels runningSystems models =
+showModels : GameSprite -> List GameObject -> List GameModel -> Html Msg
+showModels spr runningSystems models =
     div [ class "border p1" ]
-        (List.map (showModel runningSystems) models)
+        (List.map (showModel spr runningSystems) models)
 
-showModel : List GameObject -> GameModel -> Html Msg
-showModel runningSystems model =
+showModel : GameSprite -> List GameObject -> GameModel -> Html Msg
+showModel spr runningSystems model =
     div []
-        [ p [ class "m0" ]
+        [ p [ class "m0", onClick (ToggleModel spr model) ]
             [ text model.name ]
+        , if model.isActive
+            then showModelEdit runningSystems
+            else text ""
+        ]
+
+showModelEdit : List GameObject -> Html Msg
+showModelEdit runningSystems =
+    div []
+        [ mode_edit (Color.rgb 100 100 100) 20
         , select []
             (List.map showSystemOption runningSystems)
         ]
@@ -93,15 +105,3 @@ showSystemOption obj =
     option []
         [ text obj.name 
         ]
-
-
-
--- type alias GameModel =
---     { name :String
---     , path :String
---     , id :Int
---     , variables :GameObjectAttributes
---     , uniqueName :Maybe String
---     , isActive :Bool
---     , systems :List GameSystem
---     }

@@ -229,15 +229,26 @@ update msg model =
         ClickTreeSprite spr ->
             let
                 nIsActive = not spr.isActive
-                nRoot = case model.activeSprite of
-                    Nothing -> model.root
-                    Just aSpr ->
-                        DataUpdater.updateGameSprite True {aSpr | isActive = False} model.root
+                -- nRoot = case model.activeSprite of
+                --     Nothing -> model.root
+                --     Just aSpr ->
+                --         DataUpdater.updateGameSprite True {aSpr | isActive = False} model.root
                 nSpr = {spr | isActive = nIsActive}
             in
             ({model
-                | root = DataUpdater.updateGameSprite True nSpr nRoot
+                | root = DataUpdater.updateGameSprite True nSpr model.root
                 , activeSprite = if nIsActive then Just nSpr else Nothing
+            }, Cmd.none)
+        ------------------------------------------------------------
+        ToggleModel gameSprite gameModel ->
+            let
+                nGameModel = {gameModel | isActive = not gameModel.isActive}
+                nModels = ListExtra.replaceIf (\n -> n.id == gameModel.id) nGameModel gameSprite.models
+                nGameSprite = {gameSprite | models = nModels}
+            in
+            ({model
+                | root = DataUpdater.updateGameSprite False nGameSprite model.root
+                , activeSprite = Just nGameSprite
             }, Cmd.none)
 
 

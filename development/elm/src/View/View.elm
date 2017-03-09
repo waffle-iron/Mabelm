@@ -83,7 +83,7 @@ showSpriteMinimized level spr =
                 , div [ class ("col col-10" ++ cName), levelMarginLeft level ]
                     [ iconExpanded spr False
                     , p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr) ]
-                        [ text (spr.name ++ (toString spr.id)) ]
+                        [ text spr.name ]
                     ]
                 ]
             ]
@@ -105,7 +105,7 @@ showSpriteExpanded level runningSystems spr =
                 , div [ class ("col col-10" ++ cName), levelMarginLeft level ]
                     [ iconExpanded spr True
                     , p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr) ]
-                        [ text (spr.name ++ (toString spr.id)) ]
+                        [ text spr.name ]
                     ]
                 ]
             , div []

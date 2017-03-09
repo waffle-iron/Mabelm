@@ -46,33 +46,30 @@ toolbar model =
                 stop
             else
                 play_arrow
+
+        updateButton =
+            if model.isUpdating then
+                stop
+            else
+                play_arrow
+
+        buildButton =
+            if model.isCompiling then
+                autorenew
+            else
+                autorenew
+
+        baseClass =
+            "toolbar__button"
+                |> stateUpdating model.isUpdating
+                |> stateRendering model.isRendering
+                |> stateCompiling model.isCompiling
     in
-        let
-            updateButton =
-                if model.isUpdating then
-                    stop
-                else
-                    play_arrow
-        in
-            let
-                buildButton =
-                    if model.isCompiling then
-                        autorenew
-                    else
-                        autorenew
-            in
-                let
-                    baseClass =
-                        "toolbar__button"
-                            |> stateUpdating model.isUpdating
-                            |> stateRendering model.isRendering
-                            |> stateCompiling model.isCompiling
-                in
-                    div [ class "toolbar" ]
-                        [ toolbar__button model baseClass "update" ToggleButtonUpdate updateButton (Color.rgb 100 100 100) 50
-                        , toolbar__button model baseClass "render" ToggleButtonRender renderButton (Color.rgb 100 100 100) 50
-                        , toolbar__button model baseClass "compile" CompileGame autorenew (Color.rgb 100 100 100) 50
-                        ]
+        div [ class "toolbar" ]
+            [ toolbar__button model baseClass "update" ToggleButtonUpdate updateButton (Color.rgb 100 100 100) 50
+            , toolbar__button model baseClass "render" ToggleButtonRender renderButton (Color.rgb 100 100 100) 50
+            , toolbar__button model baseClass "compile" CompileGame autorenew (Color.rgb 100 100 100) 50
+            ]
 
 
 toolbar__button : Model -> ClassName -> ClassName -> Msg -> MaterialIcon -> Color.Color -> Int -> Html Msg

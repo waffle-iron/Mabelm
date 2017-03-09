@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
-module Util.DataUpdater exposing (updateGameObject, updateGameSprite)
+module Util.DataUpdater exposing (updateGameObject, updateByID, getByID)
 
 import Model exposing (..)
 
@@ -45,18 +45,35 @@ updateObj newObj obj =
 
 
 
+getByID : Int -> GameSprite -> Maybe GameSprite
+getByID id gameSpr =
+    List.head (getAllByID id [] gameSpr)
 
 
+getAllByID : Int -> List GameSprite -> GameSprite -> List GameSprite
+getAllByID id list gameSpr =
+    let 
+        nList = if id == gameSpr.id 
+            then List.append list [gameSpr]
+            else list
+    in
+        if List.length (getChildren gameSpr.children) == 0
+            then nList
+            else
+                List.concat(List.map (getAllByID id nList) (getChildren gameSpr.children))
 
-updateGameSprite : Bool -> GameSprite -> GameSprite -> GameSprite
-updateGameSprite addOldChildren newGameSpr rootGameSpr =
-    if newGameSpr.id == rootGameSpr.id then
-        if addOldChildren
-            then {newGameSpr | children = rootGameSpr.children}
-            else newGameSpr
+getChildren : GameSpriteChildren -> List GameSprite
+getChildren (GameSpriteChildren children) =
+    children
+
+
+updateByID : Int -> (GameSprite -> GameSprite) -> GameSprite -> GameSprite
+updateByID id funcUpdate gameSpr =
+    if gameSpr.id == id then
+        funcUpdate gameSpr
     else
-        {rootGameSpr | children = updateGameSpriteChildren addOldChildren newGameSpr rootGameSpr.children}
+        {gameSpr | children = updateGameSpriteCh id funcUpdate gameSpr.children}
 
-updateGameSpriteChildren : Bool -> GameSprite -> GameSpriteChildren -> GameSpriteChildren
-updateGameSpriteChildren addOldChildren newGameSpr (GameSpriteChildren children) =
-    GameSpriteChildren(List.map (updateGameSprite addOldChildren newGameSpr) children)
+updateGameSpriteCh : Int -> (GameSprite -> GameSprite) -> GameSpriteChildren -> GameSpriteChildren
+updateGameSpriteCh id funcUpdate (GameSpriteChildren children) =
+    GameSpriteChildren(List.map (updateByID id funcUpdate) children)

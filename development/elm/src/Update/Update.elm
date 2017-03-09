@@ -200,15 +200,13 @@ update msg model =
                     (model, Cmd.none)
                 Just activeSpr ->
                     let
-                        nSpr = {activeSpr
-                            | children = addChild activeSpr.children (createGameSprite model.nextID obj)
-                            , isExpanded = True
-                        }
+                        nChildren = addChild activeSpr.children (createGameSprite model.nextID obj)
+                        nRoot = DataUpdater.updateByID activeSpr.id (updateChildren nChildren) model.root
                     in
                     ({model
-                        | root = DataUpdater.updateGameSprite False nSpr model.root
+                        | root = nRoot
                         , nextID = model.nextID + 1
-                        , activeSprite = Just nSpr
+                        , activeSprite = DataUpdater.getByID activeSpr.id nRoot
                     }, Cmd.none)
         ------------------------------------------------------------
         AddModel obj ->
@@ -217,14 +215,13 @@ update msg model =
                     (model, Cmd.none)
                 Just activeSpr ->
                     let
-                        nSpr = {activeSpr
-                            | models = addModel activeSpr.models (createGameModel model.nextID obj)
-                        }
+                        nModels = addModel activeSpr.models (createGameModel model.nextID obj)
+                        nRoot = DataUpdater.updateByID activeSpr.id (updateModels nModels) model.root
                     in
                     ({model
-                        | root = DataUpdater.updateGameSprite False nSpr model.root
+                        | root = nRoot
                         , nextID = model.nextID + 1
-                        , activeSprite = Just nSpr
+                        , activeSprite = DataUpdater.getByID activeSpr.id nRoot
                     }, Cmd.none)
         ------------------------------------------------------------
         ClickTreeSprite spr ->
@@ -232,23 +229,21 @@ update msg model =
                 (root, maybeSpr) = case model.activeSprite of
                     Nothing ->
                         let
-                            nSpr = {spr | isActive = True}
-                            nRoot = DataUpdater.updateGameSprite True nSpr model.root
+                            nRoot = DataUpdater.updateByID spr.id (updateIsActive True) model.root
                         in
-                        (nRoot, Just nSpr)
+                        (nRoot, DataUpdater.getByID spr.id nRoot)
                     Just aSpr ->
                         let
-                            nRoot = DataUpdater.updateGameSprite True {aSpr | isActive = False} model.root
+                            nRoot = DataUpdater.updateByID aSpr.id (updateIsActive False) model.root
                         in
                         if aSpr.id == spr.id
                             then
                                 (nRoot, Nothing)
                             else
                                 let
-                                    nSpr = {spr | isActive = True}
-                                    xRoot = DataUpdater.updateGameSprite True nSpr nRoot
+                                    xRoot = DataUpdater.updateByID spr.id (updateIsActive True) nRoot
                                 in
-                                (xRoot, Just nSpr)
+                                (xRoot, DataUpdater.getByID spr.id xRoot)
             in
             ({model
                 | root = root
@@ -259,27 +254,79 @@ update msg model =
             let
                 nGameModel = {gameModel | isActive = not gameModel.isActive}
                 nModels = ListExtra.replaceIf (\n -> n.id == gameModel.id) nGameModel gameSprite.models
-                nGameSprite = {gameSprite | models = nModels}
+                nRoot = DataUpdater.updateByID gameSprite.id (updateModels nModels) model.root
             in
             ({model
-                | root = DataUpdater.updateGameSprite False nGameSprite model.root
-                , activeSprite = Just nGameSprite
+                | root = nRoot
+                , activeSprite = DataUpdater.getByID gameSprite.id nRoot
             }, Cmd.none)
         ------------------------------------------------------------
         ToggleVisiblilty spr ->
+            let
+                nRoot = DataUpdater.updateByID spr.id (updateIsVisible (not spr.isVisible)) model.root
+            in
             ({model
-                | root = DataUpdater.updateGameSprite True {spr | isVisible = not spr.isVisible} model.root
+                | root = nRoot
+                , activeSprite = updateActiveSpr model.activeSprite nRoot
             }, Cmd.none)
         ------------------------------------------------------------
         ToggleLocked spr ->
+            let
+                nRoot = DataUpdater.updateByID spr.id (updateIsLocked (not spr.isLocked)) model.root
+            in
             ({model
-                | root = DataUpdater.updateGameSprite True {spr | isLocked = not spr.isLocked} model.root
+                | root = nRoot
+                , activeSprite = updateActiveSpr model.activeSprite nRoot
             }, Cmd.none)
         ------------------------------------------------------------
         ToggleExpanded spr ->
+            let
+                nRoot = DataUpdater.updateByID spr.id (updateIsExpanded (not spr.isExpanded)) model.root
+            in
             ({model
-                | root = DataUpdater.updateGameSprite True {spr | isExpanded = not spr.isExpanded} model.root
+                | root = nRoot
+                , activeSprite = updateActiveSpr model.activeSprite nRoot
             }, Cmd.none)
+
+
+updateIsVisible : Bool -> GameSprite -> GameSprite
+updateIsVisible isVisible gameSpr =
+    {gameSpr | isVisible = isVisible}
+
+updateIsExpanded : Bool -> GameSprite -> GameSprite
+updateIsExpanded isExpanded gameSpr =
+    {gameSpr | isExpanded = isExpanded}
+
+updateIsActive : Bool -> GameSprite -> GameSprite
+updateIsActive isActive gameSpr =
+    {gameSpr | isActive = isActive}
+
+updateIsLocked : Bool -> GameSprite -> GameSprite
+updateIsLocked isLocked gameSpr =
+    {gameSpr | isLocked = isLocked}
+
+updateModels : (List GameModel) -> GameSprite -> GameSprite
+updateModels models gameSpr =
+    {gameSpr | models = models}
+
+updateChildren : GameSpriteChildren -> GameSprite -> GameSprite
+updateChildren children gameSpr =
+    {gameSpr | children = children}
+
+updateActiveSpr : Maybe GameSprite -> GameSprite -> Maybe GameSprite
+updateActiveSpr maybeSpr root =
+    case maybeSpr of
+        Nothing -> Nothing
+        Just activeSpr ->
+            DataUpdater.getByID activeSpr.id root
+
+
+
+
+
+
+
+
 
 
 updatePackage : GamePackage -> List GamePackage -> List GamePackage

@@ -202,6 +202,7 @@ update msg model =
                     let
                         nSpr = {activeSpr
                             | children = addChild activeSpr.children (createGameSprite model.nextID obj)
+                            , isExpanded = True
                         }
                     in
                     ({model
@@ -228,18 +229,30 @@ update msg model =
         ------------------------------------------------------------
         ClickTreeSprite spr ->
             let
-                nActiveSprite = case model.activeSprite of
-                    Nothing -> Just spr
+                (root, maybeSpr) = case model.activeSprite of
+                    Nothing ->
+                        let
+                            nSpr = {spr | isActive = True}
+                            nRoot = DataUpdater.updateGameSprite True nSpr model.root
+                        in
+                        (nRoot, Just nSpr)
                     Just aSpr ->
+                        let
+                            nRoot = DataUpdater.updateGameSprite True {aSpr | isActive = False} model.root
+                        in
                         if aSpr.id == spr.id
-                            then Nothing
-                            else Just spr
+                            then
+                                (nRoot, Nothing)
+                            else
+                                let
+                                    nSpr = {spr | isActive = True}
+                                    xRoot = DataUpdater.updateGameSprite True nSpr nRoot
+                                in
+                                (xRoot, Just nSpr)
             in
-            -- ({model
-            --     | activeSprite = nActiveSprite
-            -- }, Cmd.none)
             ({model
-                | root = DataUpdater.updateGameSprite True {spr | isActive = not spr.isActive} model.root
+                | root = root
+                , activeSprite = maybeSpr
             }, Cmd.none)
         ------------------------------------------------------------
         ToggleModel gameSprite gameModel ->

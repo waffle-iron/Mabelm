@@ -50,7 +50,7 @@ view model =
         , div [ id "gameTree", class "" ]
             [ h2 [ class "m0 disableUserSelect" ]
                 [ text "GameTree" ]
-            , div [ class "border-bottom clearfix" ]
+            , div [ class "border-bottom" ]
                 [ showSprite 0 model.runningSystems model.root
                 ]
             ]
@@ -64,29 +64,33 @@ showSpriteMinimized : Int -> GameSprite -> Html Msg
 showSpriteMinimized level spr =
     let
         cName = if spr.isActive then " isActive" else ""
-    in      
-    div [ class "clearfix border" ]
-        [ iconVisible spr spr.isVisible
-        , iconLocked spr spr.isLocked
-        , div [ class ("col col-10" ++ cName), levelMarginLeft level ]
-            [ iconExpanded spr False
-            , p [ class ("m0 inline-block disableUserSelect"), onClick (ClickTreeSprite spr) ]
-                [ text spr.name ]] 
+    in
+    div []
+        [ div [ class "border-top clearfix" ]
+            [ iconVisible spr spr.isVisible
+            , iconLocked spr spr.isLocked
+            , div [ class ("col col-10" ++ cName), levelMarginLeft level ]
+                [ iconExpanded spr False
+                , p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr) ]
+                    [ text spr.name ]]
+            ]
         ]
 
 showSpriteExpanded : Int -> List GameObject -> GameSprite -> Html Msg
 showSpriteExpanded level runningSystems spr =
     let
         cName = if spr.isActive then " isActive" else ""
-    in    
-    div [ class "clearfix border-top" ]
-        [ iconVisible spr spr.isVisible
-        , iconLocked spr spr.isLocked
-        , div [ class ("col col-10" ++ cName), levelMarginLeft level ]
-            [ iconExpanded spr True
-            , p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr) ]
-                [ text spr.name ]] 
-        , div [ class "clearfix" ]
+    in
+    div []
+        [ div [ class "border-top clearfix" ]
+            [ iconVisible spr spr.isVisible
+            , iconLocked spr spr.isLocked
+            , div [ class ("col col-10" ++ cName), levelMarginLeft level ]
+                [ iconExpanded spr True
+                , p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr) ]
+                    [ text spr.name ]]
+            ]
+        , div []
             (showSpriteChildren level runningSystems spr.children)
         ]
 

@@ -43,6 +43,11 @@ updateObj newObj obj =
     else
         obj
 
+
+
+
+
+
 updateGameSprite : Bool -> GameSprite -> GameSprite -> GameSprite
 updateGameSprite addOldChildren newGameSpr rootGameSpr =
     if newGameSpr.id == rootGameSpr.id then

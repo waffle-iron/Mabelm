@@ -27,7 +27,7 @@ $transitionAttr: all 2.1s ease-in;
 
 $toolbar__buttonStroke: 3px;
 
-$gameTree__width: 800px;
+$gameTree__width: 300px;
 
 body, html {
 	width: 100vw;
@@ -132,4 +132,8 @@ body, html {
 
 .sprIsActive {
 	background-color: #ccc;
+}
+
+.isActive {
+	background-color: #aaa;
 }

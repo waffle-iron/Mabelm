@@ -48,6 +48,29 @@ rootSprite =
         }
     , uniqueName = Just "root"
     , isActive = False
+    , isExpanded = True
+    , isLocked = False
+    , isVisible = True
+    , models = [gameModel]
+    , children = (GameSpriteChildren [rootSprite2])
+    }
+
+rootSprite2 : GameSprite
+rootSprite2 =
+    { name = "Sprite"
+    , path = "cranberry.sprite"
+    , id = 1330
+    , variables =
+        { integers = Nothing
+        , strings = Nothing
+        , floats = Nothing
+        , booleans = Nothing
+        }
+    , uniqueName = Just "root"
+    , isActive = False
+    , isExpanded = False
+    , isLocked = False
+    , isVisible = False
     , models = [gameModel]
     , children = (GameSpriteChildren [])
     }
@@ -159,6 +182,9 @@ type alias GameSprite =
     , variables :GameObjectAttributes
     , uniqueName :Maybe String
     , isActive :Bool
+    , isExpanded :Bool
+    , isLocked :Bool
+    , isVisible :Bool
     , models :List GameModel
     , children :GameSpriteChildren
     }
@@ -193,6 +219,9 @@ createGameSprite nextID obj =
     , variables = obj.variables
     , uniqueName = obj.uniqueName
     , isActive = False
+    , isExpanded = False
+    , isLocked = False
+    , isVisible = True
     , models = []
     , children = (GameSpriteChildren [])
     }

@@ -45,4 +45,7 @@ type Msg
     | AddSprite GameObject
     | AddModel GameObject
     | ClickTreeSprite GameSprite
+    | ToggleVisiblilty GameSprite
+    | ToggleLocked GameSprite
+    | ToggleExpanded GameSprite
     | ToggleModel GameSprite GameModel

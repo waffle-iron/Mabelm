@@ -228,16 +228,18 @@ update msg model =
         ------------------------------------------------------------
         ClickTreeSprite spr ->
             let
-                nIsActive = not spr.isActive
-                -- nRoot = case model.activeSprite of
-                --     Nothing -> model.root
-                --     Just aSpr ->
-                --         DataUpdater.updateGameSprite True {aSpr | isActive = False} model.root
-                nSpr = {spr | isActive = nIsActive}
+                nActiveSprite = case model.activeSprite of
+                    Nothing -> Just spr
+                    Just aSpr ->
+                        if aSpr.id == spr.id
+                            then Nothing
+                            else Just spr
             in
+            -- ({model
+            --     | activeSprite = nActiveSprite
+            -- }, Cmd.none)
             ({model
-                | root = DataUpdater.updateGameSprite True nSpr model.root
-                , activeSprite = if nIsActive then Just nSpr else Nothing
+                | root = DataUpdater.updateGameSprite True {spr | isActive = not spr.isActive} model.root
             }, Cmd.none)
         ------------------------------------------------------------
         ToggleModel gameSprite gameModel ->
@@ -249,6 +251,21 @@ update msg model =
             ({model
                 | root = DataUpdater.updateGameSprite False nGameSprite model.root
                 , activeSprite = Just nGameSprite
+            }, Cmd.none)
+        ------------------------------------------------------------
+        ToggleVisiblilty spr ->
+            ({model
+                | root = DataUpdater.updateGameSprite True {spr | isVisible = not spr.isVisible} model.root
+            }, Cmd.none)
+        ------------------------------------------------------------
+        ToggleLocked spr ->
+            ({model
+                | root = DataUpdater.updateGameSprite True {spr | isLocked = not spr.isLocked} model.root
+            }, Cmd.none)
+        ------------------------------------------------------------
+        ToggleExpanded spr ->
+            ({model
+                | root = DataUpdater.updateGameSprite True {spr | isExpanded = not spr.isExpanded} model.root
             }, Cmd.none)
 
 

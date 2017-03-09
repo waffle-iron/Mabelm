@@ -18,7 +18,7 @@
 
 module View.View exposing (..)
 
-import Html exposing (Html, div, h2, p, h5, span, text, button, select, option)
+import Html exposing (Html, Attribute, div, h2, p, h5, span, text, button, select, option)
 import Html.Attributes exposing (id, class)
 
 import Messages exposing (Msg(..))
@@ -28,9 +28,15 @@ import View.Toolbar.ViewAvailableObjects exposing (viewAvailableObjects)
 import View.Toolbar.ViewActiveSystems exposing (viewActiveSystems)
 import View.GameWindow.ViewGameWindow exposing (gameWindow)
 import Html.Events exposing (onClick)
+import Html.Attributes exposing (style)
 
 import Material.Icons.Editor exposing (mode_edit)
+import Material.Icons.Navigation exposing (chevron_right, expand_more)
+import Material.Icons.Action exposing (lock, lock_open, visibility, visibility_off)
 import Color as Color
+import Svg exposing (Svg)
+
+type alias MaterialIcon = (Color.Color -> Int -> Svg Msg)
 
 view : Model -> Html Msg
 view model =
@@ -44,64 +50,118 @@ view model =
         , div [ id "gameTree", class "" ]
             [ h2 [ class "m0 disableUserSelect" ]
                 [ text "GameTree" ]
-            , showSprite model.runningSystems model.root
+            , div [ class "border-bottom clearfix" ]
+                [ showSprite 0 model.runningSystems model.root
+                ]
             ]
         ]
 
-showSprite : List GameObject -> GameSprite -> Html Msg
-showSprite runningSystems spr =
-    div []
-        [ if spr.isActive then showSpriteActive runningSystems spr else showSpriteInActive spr
-        , div []
-            [ showSpriteChildren runningSystems spr.children
-            ]
+showSprite : Int -> List GameObject -> GameSprite -> Html Msg
+showSprite level runningSystems spr =
+    if spr.isExpanded then showSpriteExpanded level runningSystems spr else showSpriteMinimized level spr
+
+showSpriteMinimized : Int -> GameSprite -> Html Msg
+showSpriteMinimized level spr =
+    let
+        cName = if spr.isActive then " isActive" else ""
+    in      
+    div [ class "clearfix border" ]
+        [ iconVisible spr spr.isVisible
+        , iconLocked spr spr.isLocked
+        , div [ class ("col col-10" ++ cName), levelMarginLeft level ]
+            [ iconExpanded spr False
+            , p [ class ("m0 inline-block disableUserSelect"), onClick (ClickTreeSprite spr) ]
+                [ text spr.name ]] 
         ]
 
-showSpriteInActive : GameSprite -> Html Msg
-showSpriteInActive spr =
-    div [ class "pl1 inline-block" ]
-        [ p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr)  ]
-            [ text spr.name ]
+showSpriteExpanded : Int -> List GameObject -> GameSprite -> Html Msg
+showSpriteExpanded level runningSystems spr =
+    let
+        cName = if spr.isActive then " isActive" else ""
+    in    
+    div [ class "clearfix border-top" ]
+        [ iconVisible spr spr.isVisible
+        , iconLocked spr spr.isLocked
+        , div [ class ("col col-10" ++ cName), levelMarginLeft level ]
+            [ iconExpanded spr True
+            , p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr) ]
+                [ text spr.name ]] 
+        , div [ class "clearfix" ]
+            (showSpriteChildren level runningSystems spr.children)
         ]
 
-showSpriteActive : List GameObject -> GameSprite -> Html Msg
-showSpriteActive runningSystems spr =
-    div [ class "p1 border inline-block" ]
-        [ p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr)  ]
-            [ text spr.name ]
-        , showModels spr runningSystems spr.models
-        ]
+showSpriteChildren : Int -> List GameObject -> GameSpriteChildren -> List (Html Msg)
+showSpriteChildren level runningSystems (GameSpriteChildren children) =
+    (List.map (showSprite (level+1) runningSystems) children)
 
-showSpriteChildren : List GameObject -> GameSpriteChildren -> Html Msg
-showSpriteChildren runningSystems (GameSpriteChildren children) =
-    div [ class "ml2" ]
-        (List.map (showSprite runningSystems) children)
+iconExpanded : GameSprite -> Bool -> Html Msg
+iconExpanded spr isExpanded =
+    let
+        icon = if isExpanded
+            then expand_more
+            else chevron_right
+    in
+    iconGeneric "" ToggleExpanded spr icon
+
+iconLocked : GameSprite -> Bool -> Html Msg
+iconLocked spr isLocked =
+    let
+        icon = if isLocked
+            then lock
+            else lock_open
+    in
+    iconGeneric "border-right" ToggleLocked spr icon
+
+iconVisible : GameSprite -> Bool -> Html Msg
+iconVisible spr isVisible =
+    let
+        icon = if isVisible
+            then visibility
+            else visibility_off
+    in
+    iconGeneric "border-right" ToggleVisiblilty spr icon
+
+iconGeneric : String -> (GameSprite -> Msg) -> GameSprite -> MaterialIcon -> Html Msg
+iconGeneric addClass msg spr icon =
+    div [ class ("col col-1 " ++ addClass), onClick (msg spr) ]
+        [ icon (Color.rgb 100 100 100) 20
+        ]
                  
-showModels : GameSprite -> List GameObject -> List GameModel -> Html Msg
-showModels spr runningSystems models =
-    div [ class "border p1" ]
-        (List.map (showModel spr runningSystems) models)
+-- showModels : GameSprite -> List GameObject -> List GameModel -> Html Msg
+-- showModels spr runningSystems models =
+--     div [ class "border p1" ]
+--         (List.map (showModel spr runningSystems) models)
 
-showModel : GameSprite -> List GameObject -> GameModel -> Html Msg
-showModel spr runningSystems model =
-    div []
-        [ p [ class "m0", onClick (ToggleModel spr model) ]
-            [ text model.name ]
-        , if model.isActive
-            then showModelEdit runningSystems
-            else text ""
-        ]
+-- showModel : GameSprite -> List GameObject -> GameModel -> Html Msg
+-- showModel spr runningSystems model =
+--     div []
+--         [ p [ class "m0", onClick (ToggleModel spr model) ]
+--             [ text model.name ]
+--         , if model.isActive
+--             then showModelEdit runningSystems
+--             else text ""
+--         ]
 
-showModelEdit : List GameObject -> Html Msg
-showModelEdit runningSystems =
-    div []
-        [ mode_edit (Color.rgb 100 100 100) 20
-        , select []
-            (List.map showSystemOption runningSystems)
-        ]
+-- showModelEdit : List GameObject -> Html Msg
+-- showModelEdit runningSystems =
+--     div []
+--         [ mode_edit (Color.rgb 100 100 100) 20
+--         , select []
+--             (List.map showSystemOption runningSystems)
+--         ]
 
-showSystemOption : GameObject -> Html Msg
-showSystemOption obj =
-    option []
-        [ text obj.name 
-        ]
+-- showSystemOption : GameObject -> Html Msg
+-- showSystemOption obj =
+--     option []
+--         [ text obj.name 
+--         ]
+
+levelMarginLeft : Int -> Attribute msg
+levelMarginLeft level =
+    let
+        levelMargin = 12
+        marginLeft = levelMargin * level
+    in
+    style
+    [ ("padding-left", (toString marginLeft) ++ "px")
+    ]

@@ -1,25 +1,27 @@
 {-
-    Mabelm 
-    Copyright (C) 2017  Jeremy Meltingtallow
+   Mabelm
+   Copyright (C) 2017  Jeremy Meltingtallow
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -}
+
 
 module Model exposing (..)
 
+
 model : Model
-model = 
+model =
     { isCompiling = False
     , isRendering = False
     , isUpdating = False
@@ -34,6 +36,7 @@ model =
     , nextID = 1
     , activeSprite = Nothing
     }
+
 
 rootSprite : GameSprite
 rootSprite =
@@ -51,9 +54,10 @@ rootSprite =
     , isExpanded = True
     , isLocked = False
     , isVisible = True
-    , models = [gameModel]
-    , children = (GameSpriteChildren [rootSprite2])
+    , models = [ gameModel ]
+    , children = (GameSpriteChildren [ rootSprite2 ])
     }
+
 
 rootSprite2 : GameSprite
 rootSprite2 =
@@ -71,9 +75,10 @@ rootSprite2 =
     , isExpanded = False
     , isLocked = False
     , isVisible = False
-    , models = [gameModel]
+    , models = [ gameModel ]
     , children = (GameSpriteChildren [])
     }
+
 
 gameModel : GameModel
 gameModel =
@@ -91,44 +96,49 @@ gameModel =
     , systems = []
     }
 
+
 type alias Model =
-    { isCompiling :Bool
-    , isRendering :Bool
-    , isUpdating :Bool
-    , modelPackages :Maybe GamePackageGroup
-    , systemPackages :Maybe GamePackageGroup
-    , spritePackages :Maybe GamePackageGroup
-    , currentID :Int
-    , showsAvailableObjects :Bool
-    , showsRunningSystems :Bool
-    , runningSystems :List GameObject
+    { isCompiling : Bool
+    , isRendering : Bool
+    , isUpdating : Bool
+    , modelPackages : Maybe GamePackageGroup
+    , systemPackages : Maybe GamePackageGroup
+    , spritePackages : Maybe GamePackageGroup
+    , currentID : Int
+    , showsAvailableObjects : Bool
+    , showsRunningSystems : Bool
+    , runningSystems : List GameObject
     , root : GameSprite
-    , nextID :Int
+    , nextID : Int
     , activeSprite : Maybe GameSprite
     }
 
+
 type alias GamePackageGroup =
-    { packages :List GamePackage
-    , isVisible :Bool
-    , packageType :GameObjectType
+    { packages : List GamePackage
+    , isVisible : Bool
+    , packageType : GameObjectType
     }
+
 
 type alias GamePackage =
-    { objects :List GameObject
-    , path :String
-    , isVisible :Bool
-    , packageType :GameObjectType
+    { objects : List GameObject
+    , path : String
+    , isVisible : Bool
+    , packageType : GameObjectType
     }
 
+
 type alias GameObject =
-    { name :String
-    , path :String
-    , id :Int
+    { name : String
+    , path : String
+    , id : Int
     , variables : GameObjectAttributes
     , uniqueName : Maybe String
-    , isActive :Bool
-    , gameObjectType :GameObjectType
+    , isActive : Bool
+    , gameObjectType : GameObjectType
     }
+
 
 type alias GameObjectAttributes =
     { integers : Maybe (List FieldInteger)
@@ -137,79 +147,94 @@ type alias GameObjectAttributes =
     , booleans : Maybe (List FieldBool)
     }
 
+
 type alias FieldInteger =
-    { pName :String
-    , pValue :Maybe Int
+    { pName : String
+    , pValue : Maybe Int
     }
+
 
 type alias FieldFloat =
-    { pName :String
-    , pValue :Maybe Float
+    { pName : String
+    , pValue : Maybe Float
     }
+
 
 type alias FieldString =
-    { pName :String
-    , pValue :Maybe String
+    { pName : String
+    , pValue : Maybe String
     }
+
 
 type alias FieldBool =
-    { pName :String
-    , pValue :Maybe Bool
+    { pName : String
+    , pValue : Maybe Bool
     }
+
 
 type alias Field a =
-    { pName :String
-    , pValue :Maybe a
+    { pName : String
+    , pValue : Maybe a
     }
 
+
 type alias AllPackages =
-    { modelPackages : (List GameObject)
-    , systemPackages : (List GameObject)
-    , spritePackages : (List GameObject)
+    { modelPackages : List GameObject
+    , systemPackages : List GameObject
+    , spritePackages : List GameObject
     }
+
 
 type GameObjectType
     = Sprite
     | System
     | Model_
 
-type GameSpriteChildren = GameSpriteChildren (List GameSprite)
+
+type GameSpriteChildren
+    = GameSpriteChildren (List GameSprite)
+
 
 type alias GameSprite =
-    { name :String
-    , path :String
-    , id :Int
-    , variables :GameObjectAttributes
-    , uniqueName :Maybe String
-    , isActive :Bool
-    , isExpanded :Bool
-    , isLocked :Bool
-    , isVisible :Bool
-    , models :List GameModel
-    , children :GameSpriteChildren
+    { name : String
+    , path : String
+    , id : Int
+    , variables : GameObjectAttributes
+    , uniqueName : Maybe String
+    , isActive : Bool
+    , isExpanded : Bool
+    , isLocked : Bool
+    , isVisible : Bool
+    , models : List GameModel
+    , children : GameSpriteChildren
     }
+
 
 type alias GameModel =
-    { name :String
-    , path :String
-    , id :Int
-    , variables :GameObjectAttributes
-    , uniqueName :Maybe String
-    , isActive :Bool
-    , systems :List GameSystem
+    { name : String
+    , path : String
+    , id : Int
+    , variables : GameObjectAttributes
+    , uniqueName : Maybe String
+    , isActive : Bool
+    , systems : List GameSystem
     }
 
-type RunningModels = RunningModels (List GameModel)
+
+type RunningModels
+    = RunningModels (List GameModel)
+
 
 type alias GameSystem =
-    { name :String
-    , path :String
-    , id :Int
-    , variables :GameObjectAttributes
-    , uniqueName :Maybe String
-    , isActive :Bool
-    , models :RunningModels
+    { name : String
+    , path : String
+    , id : Int
+    , variables : GameObjectAttributes
+    , uniqueName : Maybe String
+    , isActive : Bool
+    , models : RunningModels
     }
+
 
 createGameSprite : Int -> GameObject -> GameSprite
 createGameSprite nextID obj =
@@ -225,6 +250,7 @@ createGameSprite nextID obj =
     , models = []
     , children = (GameSpriteChildren [])
     }
+
 
 createGameModel : Int -> GameObject -> GameModel
 createGameModel nextID obj =

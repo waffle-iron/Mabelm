@@ -29,9 +29,8 @@ import View.Toolbar.ViewActiveSystems exposing (viewActiveSystems)
 import View.GameWindow.ViewGameWindow exposing (gameWindow)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (style)
-import Material.Icons.Editor exposing (mode_edit)
 import Material.Icons.Navigation exposing (chevron_right, expand_more)
-import Material.Icons.Action exposing (lock, lock_open, visibility, visibility_off)
+import Material.Icons.Action exposing (lock, lock_open, visibility, visibility_off, delete)
 import Color as Color
 import Svg exposing (Svg)
 
@@ -49,12 +48,15 @@ view model =
             [ viewActiveSystems model
             , viewAvailableObjects model
             ]
-        , div [ id "gameTree", class "" ]
+        , div [ id "gameTree", class "border-left border-right border-top" ]
             [ h2 [ class "m0 disableUserSelect" ]
                 [ text "GameTree" ]
             , div [ class "border-bottom" ]
                 [ showSprite 0 model.runningSystems model.root
                 ]
+            ]
+        , div [ id "gameTreeFooter", class "border" ]
+            [ viewButtonBar model.activeSprite
             ]
         ]
 
@@ -83,7 +85,7 @@ showSpriteMinimized level spr =
                 , div [ class ("col col-10" ++ cName), levelMarginLeft level ]
                     [ iconExpanded spr False
                     , p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr) ]
-                        [ text spr.name ]
+                        [ text (spr.name ++ (toString spr.id)) ]
                     ]
                 ]
             ]
@@ -105,7 +107,7 @@ showSpriteExpanded level runningSystems spr =
                 , div [ class ("col col-10" ++ cName), levelMarginLeft level ]
                     [ iconExpanded spr True
                     , p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr) ]
-                        [ text spr.name ]
+                        [ text (spr.name ++ (toString spr.id)) ]
                     ]
                 ]
             , div []
@@ -161,34 +163,6 @@ iconGeneric addClass msg spr icon =
         ]
 
 
-
--- showModels : GameSprite -> List GameObject -> List GameModel -> Html Msg
--- showModels spr runningSystems models =
---     div [ class "border p1" ]
---         (List.map (showModel spr runningSystems) models)
--- showModel : GameSprite -> List GameObject -> GameModel -> Html Msg
--- showModel spr runningSystems model =
---     div []
---         [ p [ class "m0", onClick (ToggleModel spr model) ]
---             [ text model.name ]
---         , if model.isActive
---             then showModelEdit runningSystems
---             else text ""
---         ]
--- showModelEdit : List GameObject -> Html Msg
--- showModelEdit runningSystems =
---     div []
---         [ mode_edit (Color.rgb 100 100 100) 20
---         , select []
---             (List.map showSystemOption runningSystems)
---         ]
--- showSystemOption : GameObject -> Html Msg
--- showSystemOption obj =
---     option []
---         [ text obj.name
---         ]
-
-
 levelMarginLeft : Int -> Attribute msg
 levelMarginLeft level =
     let
@@ -201,3 +175,13 @@ levelMarginLeft level =
         style
             [ ( "padding-left", (toString marginLeft) ++ "px" )
             ]
+
+
+viewButtonBar : Maybe GameSprite -> Html Msg
+viewButtonBar maybeSpr =
+    case maybeSpr of
+        Nothing ->
+            div [ class "ml1" ] [ delete (Color.rgb 150 150 150) 20 ]
+
+        Just spr ->
+            div [ class "ml1", onClick (DeleteSprite spr) ] [ delete (Color.rgb 100 100 100) 20 ]

@@ -29,6 +29,8 @@ $toolbar__buttonStroke: 3px;
 
 $gameTree__width: 300px;
 
+$gameTreeFooter__height: 30px;
+
 body, html {
 	width: 100vw;
 	height: 100vh;
@@ -61,10 +63,20 @@ body, html {
 	right: 0;
 	position: absolute;
 	width: $gameTree__width;
-	height: 100vh;
+	height: calc(100vh - #{$gameTreeFooter__height});
 	z-index: 2;
 	box-shadow: $boxShadow;
 	overflow: auto;
+}
+
+#gameTreeFooter {
+	top: calc(100vh - #{$gameTreeFooter__height});
+	right: 0;
+	position: absolute;
+	width: $gameTree__width;
+	height: $gameTreeFooter__height;
+	z-index: 2;
+	box-shadow: $boxShadow;
 }
 
 #gamePackageContainers {

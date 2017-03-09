@@ -92,7 +92,7 @@ displayGameObject buttonText msg obj =
                 , displayFieldList obj.variables.integers (displayFieldInteger obj)
                 , displayFieldList obj.variables.floats (displayFieldFloat obj)
                 , displayFieldList obj.variables.booleans (displayFieldBoolean obj)
-                , button [ class "pl1 pr1", onClick (msg obj) ] [ text buttonText ]
+                , button [ class "pl1 pr1 disableUserSelect", onClick (msg obj) ] [ text buttonText ]
                 ]
           else
             text ""
@@ -122,8 +122,8 @@ displayFieldInteger obj field =
     div [ class "clearfix" ]
         [ h5 [ class "col col-5 m0 right-align pr1 disableUserSelect" ] [ text (field.pName ++ ": ") ]
         , input [ class "col col-5", value (getValueString field.pValue), onInput (UpdateInt field obj) ] []
-        , button [ class "col col-1", onClick (DecrementInt field obj) ] [ text "-" ]
-        , button [ class "col col-1", onClick (IncrementInt field obj) ] [ text "+" ]
+        , button [ class "col col-1 disableUserSelect", onClick (DecrementInt field obj) ] [ text "-" ]
+        , button [ class "col col-1 disableUserSelect", onClick (IncrementInt field obj) ] [ text "+" ]
         ]
 
 
@@ -132,8 +132,8 @@ displayFieldFloat obj field =
     div [ class "clearfix" ]
         [ h5 [ class "col col-5 m0 right-align pr1 disableUserSelect" ] [ text (field.pName ++ ": ") ]
         , input [ class "col col-5", value (getValueString field.pValue), onInput (UpdateFloat field obj) ] []
-        , button [ class "col col-1", onClick (DecrementFloat field obj) ] [ text "-" ]
-        , button [ class "col col-1", onClick (IncrementFloat field obj) ] [ text "+" ]
+        , button [ class "col col-1 disableUserSelect", onClick (DecrementFloat field obj) ] [ text "-" ]
+        , button [ class "col col-1 disableUserSelect", onClick (IncrementFloat field obj) ] [ text "+" ]
         ]
 
 

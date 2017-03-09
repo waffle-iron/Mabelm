@@ -432,6 +432,30 @@ update msg model =
                 , Cmd.none
                 )
 
+        DeleteSprite spr ->
+            let
+                maybeParent =
+                    DataUpdater.getParentOfID spr.id model.root
+            in
+                case maybeParent of
+                    Nothing ->
+                        ( model, Cmd.none )
+
+                    Just parent ->
+                        let
+                            nChildren =
+                                removeChildByID parent.children spr.id
+
+                            nRoot =
+                                DataUpdater.updateByID parent.id (updateChildren nChildren) model.root
+                        in
+                            ( { model
+                                | root = nRoot
+                                , activeSprite = Nothing
+                              }
+                            , Cmd.none
+                            )
+
 
 updateIsVisible : Bool -> GameSprite -> GameSprite
 updateIsVisible isVisible gameSpr =
@@ -651,3 +675,8 @@ addChild (GameSpriteChildren children) nChild =
 addModel : List GameModel -> GameModel -> List GameModel
 addModel models gModel =
     List.append models [ gModel ]
+
+
+removeChildByID : GameSpriteChildren -> Int -> GameSpriteChildren
+removeChildByID (GameSpriteChildren children) id =
+    GameSpriteChildren (ListExtra.filterNot (\n -> n.id == id) children)

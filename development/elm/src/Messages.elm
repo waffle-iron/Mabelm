@@ -51,3 +51,4 @@ type Msg
     | ToggleLocked GameSprite
     | ToggleExpanded GameSprite
     | ToggleModel GameSprite GameModel
+    | DeleteSprite GameSprite

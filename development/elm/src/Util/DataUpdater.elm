@@ -17,9 +17,10 @@
 -}
 
 
-module Util.DataUpdater exposing (updateGameObject, updateByID, getByID)
+module Util.DataUpdater exposing (updateGameObject, updateByID, getByID, getAllByID, getParentOfID, getAllParentsOfID)
 
 import Model exposing (..)
+import List.Extra as ListExtra
 
 
 updateGameObject : GameObject -> Maybe GamePackageGroup -> Maybe GamePackageGroup
@@ -53,11 +54,26 @@ updateObj newObj obj =
 
 getByID : Int -> GameSprite -> Maybe GameSprite
 getByID id gameSpr =
-    List.head (getAllByID id [] gameSpr)
+    List.head (getAllByID id gameSpr)
 
 
-getAllByID : Int -> List GameSprite -> GameSprite -> List GameSprite
-getAllByID id list gameSpr =
+getParentOfID : Int -> GameSprite -> Maybe GameSprite
+getParentOfID id gameSpr =
+    List.head (getAllParentsOfID id gameSpr)
+
+
+getAllByID : Int -> GameSprite -> List GameSprite
+getAllByID id gameSpr =
+    getAllByID_ id [] gameSpr
+
+
+getAllParentsOfID : Int -> GameSprite -> List GameSprite
+getAllParentsOfID id gameSpr =
+    getAllParentsOfID_ id [] gameSpr
+
+
+getAllByID_ : Int -> List GameSprite -> GameSprite -> List GameSprite
+getAllByID_ id list gameSpr =
     let
         nList =
             if id == gameSpr.id then
@@ -68,7 +84,27 @@ getAllByID id list gameSpr =
         if List.length (getChildren gameSpr.children) == 0 then
             nList
         else
-            List.concat (List.map (getAllByID id nList) (getChildren gameSpr.children))
+            List.concat (List.map (getAllByID_ id nList) (getChildren gameSpr.children))
+
+
+getAllParentsOfID_ : Int -> List GameSprite -> GameSprite -> List GameSprite
+getAllParentsOfID_ id list parentSpr =
+    let
+        maybeChild =
+            ListExtra.find (\n -> n.id == id) (getChildren parentSpr.children)
+
+        nList =
+            case maybeChild of
+                Nothing ->
+                    list
+
+                Just child ->
+                    List.append list [ parentSpr ]
+    in
+        if List.length (getChildren parentSpr.children) == 0 then
+            nList
+        else
+            List.concat (List.map (getAllParentsOfID_ id nList) (getChildren parentSpr.children))
 
 
 getChildren : GameSpriteChildren -> List GameSprite

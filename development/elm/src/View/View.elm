@@ -56,7 +56,7 @@ view model =
                 ]
             ]
         , div [ id "gameTreeFooter", class "border" ]
-            [ viewButtonBar model.activeSprite
+            [ viewButtonBar model.activeSprite model.root.id
             ]
         ]
 
@@ -177,11 +177,14 @@ levelMarginLeft level =
             ]
 
 
-viewButtonBar : Maybe GameSprite -> Html Msg
-viewButtonBar maybeSpr =
+viewButtonBar : Maybe GameSprite -> Int -> Html Msg
+viewButtonBar maybeSpr rootID =
     case maybeSpr of
         Nothing ->
             div [ class "ml1" ] [ delete (Color.rgb 150 150 150) 20 ]
 
         Just spr ->
-            div [ class "ml1", onClick (DeleteSprite spr) ] [ delete (Color.rgb 100 100 100) 20 ]
+            if spr.id == rootID then
+                div [ class "ml1" ] [ delete (Color.rgb 150 150 150) 20 ]
+            else
+                div [ class "ml1", onClick (DeleteSprite spr) ] [ delete (Color.rgb 100 100 100) 20 ]

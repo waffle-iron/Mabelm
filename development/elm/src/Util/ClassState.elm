@@ -17,18 +17,28 @@
 -}
 
 
-module Util.ClassState exposing (classStateGameSprite)
+module Util.ClassState exposing (classStateGameSprite, classStateModel)
 
 import Model exposing (..)
 
 
-classStateGameSprite : GameSprite -> String
-classStateGameSprite spr =
-    ""
+classStateGameSprite : String -> GameSprite -> String
+classStateGameSprite baseClass spr =
+    baseClass
         |> addState spr.isActive " isActive"
         |> addState spr.isExpanded " isExpanded"
         |> addState spr.isLocked " isLocked"
         |> addState spr.isVisible " isVisible"
+
+
+classStateModel : String -> Model -> String
+classStateModel baseClass spr =
+    baseClass
+        |> addState spr.isCompiling " isCompiling"
+        |> addState spr.isRendering " isRendering"
+        |> addState spr.isUpdating " isUpdating"
+        |> addState spr.showsAvailableObjects " showsAvailableObjects"
+        |> addState spr.showsRunningSystems " showsRunningSystems"
 
 
 addState : Bool -> String -> String -> String

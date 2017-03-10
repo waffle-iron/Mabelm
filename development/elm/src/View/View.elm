@@ -34,6 +34,7 @@ import Material.Icons.Action exposing (lock, lock_open, visibility, visibility_o
 import Color as Color
 import Svg exposing (Svg)
 import Util.ClassState as ClassState
+import Util.Util exposing (ifThen)
 
 
 type alias MaterialIcon =
@@ -73,7 +74,7 @@ showSpriteExpanded level runningSystems spr =
         [ div []
             [ iconGeneric ToggleVisiblilty spr (ifThen spr.isVisible visibility visibility_off)
             , iconGeneric ToggleLocked spr (ifThen spr.isLocked lock lock_open)
-            , div [ class ("inline-block" ++ (ClassState.classStateGameSprite spr)) ]
+            , div [ class (ClassState.classStateGameSprite "inline-block" spr) ]
                 [ iconGeneric ToggleExpanded spr (ifThen spr.isExpanded expand_more chevron_right)
                 , p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr) ]
                     [ text (spr.name ++ (toString spr.id)) ]
@@ -87,14 +88,6 @@ showSpriteExpanded level runningSystems spr =
 showSpriteChildren : Int -> List GameObject -> GameSpriteChildren -> List (Html Msg)
 showSpriteChildren level runningSystems (GameSpriteChildren children) =
     (List.map (showSprite (level + 1) runningSystems) children)
-
-
-ifThen : Bool -> a -> a -> a
-ifThen bool iconA iconB =
-    if bool then
-        iconA
-    else
-        iconB
 
 
 iconGeneric : (GameSprite -> Msg) -> GameSprite -> MaterialIcon -> Html Msg

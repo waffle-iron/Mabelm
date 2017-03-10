@@ -28,6 +28,8 @@ import Svg exposing (Svg)
 import Messages exposing (Msg(..))
 import Html.Events exposing (onClick)
 import Model exposing (Model)
+import Util.ClassState as ClassState
+import Util.Util exposing (ifThen)
 
 
 type alias MaterialIcon =
@@ -42,28 +44,16 @@ toolbar : Model -> Html Msg
 toolbar model =
     let
         renderButton =
-            if model.isRendering then
-                stop
-            else
-                play_arrow
+            ifThen model.isRendering stop play_arrow
 
         updateButton =
-            if model.isUpdating then
-                stop
-            else
-                play_arrow
+            ifThen model.isUpdating stop play_arrow
 
         buildButton =
-            if model.isCompiling then
-                autorenew
-            else
-                autorenew
+            ifThen model.isCompiling autorenew autorenew
 
         baseClass =
-            "toolbar__button"
-                |> stateUpdating model.isUpdating
-                |> stateRendering model.isRendering
-                |> stateCompiling model.isCompiling
+            ClassState.classStateModel "toolbar__button" model
     in
         div [ class "toolbar" ]
             [ toolbar__button model baseClass "update" ToggleButtonUpdate updateButton (Color.rgb 100 100 100) 50
@@ -77,27 +67,3 @@ toolbar__button model baseClass subClass msg icon color size =
     div [ class (baseClass ++ " " ++ subClass), onClick msg ]
         [ icon color size
         ]
-
-
-stateUpdating : Bool -> String -> String
-stateUpdating isUpdating str =
-    if isUpdating then
-        str ++ " isLoading"
-    else
-        str
-
-
-stateRendering : Bool -> String -> String
-stateRendering isRendering str =
-    if isRendering then
-        str ++ " isRendering"
-    else
-        str
-
-
-stateCompiling : Bool -> String -> String
-stateCompiling isCompiling str =
-    if isCompiling then
-        str ++ " isCompiling"
-    else
-        str

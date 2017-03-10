@@ -31,6 +31,10 @@ $gameTree__width: 300px;
 
 $gameTreeFooter__height: 30px;
 
+tr, td, table {
+	border: 1px solid #ccc;
+}
+
 body, html {
 	width: 100vw;
 	height: 100vh;

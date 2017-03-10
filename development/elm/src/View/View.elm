@@ -108,6 +108,8 @@ showSpriteExpanded level runningSystems spr =
                     [ iconExpanded spr True
                     , p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr) ]
                         [ text (spr.name ++ (toString spr.id)) ]
+                    , div []
+                        (List.map viewModel spr.models)
                     ]
                 ]
             , div []
@@ -188,3 +190,8 @@ viewButtonBar maybeSpr rootID =
                 div [ class "ml1" ] [ delete (Color.rgb 150 150 150) 20 ]
             else
                 div [ class "ml1", onClick (DeleteSprite spr) ] [ delete (Color.rgb 100 100 100) 20 ]
+
+
+viewModel : GameModel -> Html Msg
+viewModel model =
+    text model.name

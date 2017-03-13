@@ -31,6 +31,18 @@ classStateGameSprite baseClass spr =
         |> addState spr.isVisible " isVisible"
 
 
+classStateGameModel : String -> GameModel -> String
+classStateGameModel baseClass model =
+    baseClass
+        |> addState model.isActive " isActive"
+
+
+classStateGameSystem : String -> GameSystem -> String
+classStateGameSystem baseClass system =
+    baseClass
+        |> addState system.isActive " isActive"
+
+
 classStateModel : String -> Model -> String
 classStateModel baseClass spr =
     baseClass

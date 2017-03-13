@@ -88,7 +88,7 @@ gameObjectDecoder =
         (Decode.field "name" Decode.string)
         (Decode.field "path" Decode.string)
         (Decode.field "id" Decode.int)
-        (Decode.field "variables" gameObjectAttrDecoder)
+        (Decode.field "constructorVariables" gameObjectAttrDecoder)
         (Decode.field "uniqueName" (Decode.nullable Decode.string))
         (Decode.oneOf [ Decode.field "isActive" Decode.bool, Decode.succeed True ])
         (Decode.field "type" (Decode.string |> Decode.andThen gameObjectTypeDecoder))

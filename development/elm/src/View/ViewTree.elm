@@ -81,8 +81,11 @@ iconGeneric elem msg spr icon =
 
 showModels : List GameModel -> Html Msg
 showModels models =
-    div [ class "border p1" ]
-        (List.map showModel models)
+    if List.length models > 0 then
+        div [ class "border p1" ]
+            (List.map showModel models)
+    else
+        text ""
 
 
 showModel : GameModel -> Html Msg

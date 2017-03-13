@@ -541,13 +541,13 @@ incrementDecrementObjInt fieldInt obj operation =
         nFieldInt =
             { fieldInt | pValue = Just (operation val 1) }
 
-        variables =
-            obj.variables
+        constructorVariables =
+            obj.constructorVariables
 
-        nVariables =
-            { variables | integers = updateField nFieldInt obj.variables.integers }
+        nConstructorVariables =
+            { constructorVariables | integers = updateField nFieldInt obj.constructorVariables.integers }
     in
-        { obj | variables = nVariables }
+        { obj | constructorVariables = nConstructorVariables }
 
 
 incrementDecrementObjFloat : FieldFloat -> GameObject -> (Float -> Float -> Float) -> GameObject
@@ -564,13 +564,13 @@ incrementDecrementObjFloat fieldFloat obj operation =
         nFieldFloat =
             { fieldFloat | pValue = Just (operation val 1) }
 
-        variables =
-            obj.variables
+        constructorVariables =
+            obj.constructorVariables
 
-        nVariables =
-            { variables | floats = updateField nFieldFloat obj.variables.floats }
+        nConstructorVariables =
+            { constructorVariables | floats = updateField nFieldFloat obj.constructorVariables.floats }
     in
-        { obj | variables = nVariables }
+        { obj | constructorVariables = nConstructorVariables }
 
 
 toggleObjBool : FieldBool -> GameObject -> GameObject
@@ -587,13 +587,13 @@ toggleObjBool fieldBool obj =
         nFieldBool =
             { fieldBool | pValue = Just (not val) }
 
-        variables =
-            obj.variables
+        constructorVariables =
+            obj.constructorVariables
 
-        nVariables =
-            { variables | booleans = updateField nFieldBool obj.variables.booleans }
+        nConstructorVariables =
+            { constructorVariables | booleans = updateField nFieldBool obj.constructorVariables.booleans }
     in
-        { obj | variables = nVariables }
+        { obj | constructorVariables = nConstructorVariables }
 
 
 changeFieldString : FieldString -> String -> GameObject -> GameObject
@@ -602,13 +602,13 @@ changeFieldString fieldString str obj =
         nFieldString =
             { fieldString | pValue = Just (str) }
 
-        variables =
-            obj.variables
+        constructorVariables =
+            obj.constructorVariables
 
-        nVariables =
-            { variables | strings = updateField nFieldString obj.variables.strings }
+        nConstructorVariables =
+            { constructorVariables | strings = updateField nFieldString obj.constructorVariables.strings }
     in
-        { obj | variables = nVariables }
+        { obj | constructorVariables = nConstructorVariables }
 
 
 changeFieldInt : FieldInteger -> String -> GameObject -> GameObject
@@ -625,13 +625,13 @@ changeFieldInt fieldInt str obj =
         nFieldInt =
             { fieldInt | pValue = Just (val) }
 
-        variables =
-            obj.variables
+        constructorVariables =
+            obj.constructorVariables
 
-        nVariables =
-            { variables | integers = updateField nFieldInt obj.variables.integers }
+        nConstructorVariables =
+            { constructorVariables | integers = updateField nFieldInt obj.constructorVariables.integers }
     in
-        { obj | variables = nVariables }
+        { obj | constructorVariables = nConstructorVariables }
 
 
 changeFieldFloat : FieldFloat -> String -> GameObject -> GameObject
@@ -648,13 +648,13 @@ changeFieldFloat fieldFloat str obj =
         nFieldFloat =
             { fieldFloat | pValue = Just (val) }
 
-        variables =
-            obj.variables
+        constructorVariables =
+            obj.constructorVariables
 
-        nVariables =
-            { variables | floats = updateField nFieldFloat obj.variables.floats }
+        nConstructorVariables =
+            { constructorVariables | floats = updateField nFieldFloat obj.constructorVariables.floats }
     in
-        { obj | variables = nVariables }
+        { obj | constructorVariables = nConstructorVariables }
 
 
 updateField : Field a -> Maybe (List (Field a)) -> Maybe (List (Field a))

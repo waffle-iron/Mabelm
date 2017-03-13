@@ -41,10 +41,10 @@ viewAvailableObjects model =
 
                     Just spr ->
                         div []
-                            [ displayGamePackage "Available Sprites" "Add to Sprite" tempFunc AddSprite model.spritePackages
+                            [ displayGamePackage "Available Sprites" "Add to Sprite" (\n -> True) AddSprite model.spritePackages
                             , displayGamePackage "Available Models" "Add to Sprite" (filterAddedModels spr.models) AddModel model.modelPackages
                             ]
-                , displayGamePackage "Available Systems" "Add to Engine" tempFunc AddSystem model.systemPackages
+                , displayGamePackage "Available Systems" "Add to Engine" (\n -> True) AddSystem model.systemPackages
                 ]
           else
             text ""
@@ -92,10 +92,10 @@ displayGameObject buttonText msg obj =
         [ h5 [ class "disableUserSelect m0 mb1 mt1", onClick (ToggleObject obj) ] [ text obj.name ]
         , if obj.isActive then
             div []
-                [ displayFieldList obj.variables.strings (displayFieldString obj)
-                , displayFieldList obj.variables.integers (displayFieldInteger obj)
-                , displayFieldList obj.variables.floats (displayFieldFloat obj)
-                , displayFieldList obj.variables.booleans (displayFieldBoolean obj)
+                [ displayFieldList obj.constructorVariables.strings (displayFieldString obj)
+                , displayFieldList obj.constructorVariables.integers (displayFieldInteger obj)
+                , displayFieldList obj.constructorVariables.floats (displayFieldFloat obj)
+                , displayFieldList obj.constructorVariables.booleans (displayFieldBoolean obj)
                 , button [ class "pl1 pr1 disableUserSelect", onClick (msg obj) ] [ text buttonText ]
                 ]
           else
@@ -166,11 +166,6 @@ getValueString maybeVal =
 
         Just val ->
             StringExtra.unquote (toString val)
-
-
-tempFunc : GameObject -> Bool
-tempFunc obj =
-    True
 
 
 filterAddedModels : List GameModel -> GameObject -> Bool

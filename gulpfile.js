@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var util = require("gulp-util");
 var exec = require('child_process').exec;
 var sass = require('gulp-sass');
 var browserSync = require('browser-sync').create();
@@ -22,8 +23,8 @@ gulp.task('serve', function() {
 		notify: false
     });
 
-    gulp.watch("./development/elm/src/**/*.elm", ['buildElm']);
-    gulp.watch("./development/scss/**/*.scss", ['sass']);
+    gulp.watch("./development/elm/src/**/*.elm", ['buildElm', 'lineCount']);
+    gulp.watch("./development/scss/**/*.scss", ['sass', 'lineCount']);
     gulp.watch("public/*.html").on('change', browserSync.reload);
     gulp.watch("public/js/*.js").on('change', browserSync.reload);
 });
@@ -42,4 +43,15 @@ gulp.task('sass', function() {
 });
 
 
-gulp.task('default', ['buildElm', 'serve']);
+gulp.task('lineCount', function (cb) {
+	// var command = "wc -l ./development/elm/src/**/*.elm";
+	var command = "find ./development/elm/src -name '*.elm' | xargs wc -l"
+
+	exec(command, function (err, stdout, stderr) {
+		cb(err);
+		util.log("\n" + stdout);
+	});
+})
+
+
+gulp.task('default', ['buildElm', 'serve', 'lineCount']);

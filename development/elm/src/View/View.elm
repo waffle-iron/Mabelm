@@ -23,9 +23,10 @@ import Html exposing (Html, Attribute, div, h2, p, h5, span, text, button, selec
 import Html.Attributes exposing (id, class)
 import Messages exposing (Msg(..))
 import Model exposing (..)
-import View.ViewToolbar as ViewToolbar
+import View.ViewToolbar exposing (toolbar)
 import View.ViewAvailableObjects exposing (viewAvailableObjects)
 import View.ViewActiveSystems exposing (viewActiveSystems)
+import View.ViewActiveItem exposing (viewActiveItem)
 import View.ViewGameWindow exposing (gameWindow)
 import Html.Attributes exposing (style)
 import View.ViewTree exposing (viewTree)
@@ -35,12 +36,19 @@ import View.ViewTreeBar exposing (viewTreeBar)
 view : Model -> Html Msg
 view model =
     div []
-        [ ViewToolbar.toolbar model
+        [ toolbar model
         , gameWindow model
         , div [ id "gamePackageContainers", class "" ]
-            [ viewActiveSystems model
+            [ viewActiveItem model
+            , viewActiveSystems model
             , viewAvailableObjects model
             ]
         , viewTree model
         , viewTreeBar model
         ]
+
+
+viewActiveGameSprite : GameSprite -> Html Msg
+viewActiveGameSprite gameSprite =
+    span []
+        [ text gameSprite.name ]

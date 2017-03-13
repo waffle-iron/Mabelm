@@ -34,7 +34,49 @@ model =
     , runningSystems = []
     , root = rootSprite
     , nextID = 1
-    , activeSprite = Nothing
+    , activeSprite = Just heavySprite
+    }
+
+
+heavySprite : GameSprite
+heavySprite =
+    { name = "HeavySprite"
+    , path = "cranberry.sprite"
+    , id = 32423948
+    , constructorVariables =
+        { integers =
+            Just
+                [ { pName = "weight"
+                  , pValue = Just 3948
+                  }
+                ]
+        , strings =
+            Just
+                [ { pName = "hippoID"
+                  , pValue = Just "Dr. Strange"
+                  }
+                ]
+        , floats =
+            Just
+                [ { pName = "speed"
+                  , pValue = Just 0.0237
+                  }
+                ]
+        , booleans =
+            Just
+                [ { pName = "isHungry"
+                  , pValue = Just True
+                  }
+                ]
+        }
+    , publicVariables = defaultSpritePublicValues
+    , uniqueName = Just "root"
+    , isActive = True
+    , isExpanded = True
+    , isLocked = False
+    , isVisible = True
+    , models = [ gameModel ]
+    , children = (GameSpriteChildren [])
     }
 
 
@@ -43,19 +85,20 @@ rootSprite =
     { name = "Sprite"
     , path = "cranberry.sprite"
     , id = 0
-    , variables =
+    , constructorVariables =
         { integers = Nothing
         , strings = Nothing
         , floats = Nothing
         , booleans = Nothing
         }
+    , publicVariables = defaultSpritePublicValues
     , uniqueName = Just "root"
     , isActive = False
     , isExpanded = True
     , isLocked = False
     , isVisible = True
     , models = [ gameModel, gameModel2 ]
-    , children = (GameSpriteChildren [ rootSprite2 ])
+    , children = (GameSpriteChildren [ rootSprite2, heavySprite ])
     }
 
 
@@ -64,12 +107,13 @@ rootSprite2 =
     { name = "Sprite"
     , path = "cranberry.sprite"
     , id = 2938
-    , variables =
+    , constructorVariables =
         { integers = Nothing
         , strings = Nothing
         , floats = Nothing
         , booleans = Nothing
         }
+    , publicVariables = defaultSpritePublicValues
     , uniqueName = Just "root"
     , isActive = False
     , isExpanded = True
@@ -85,7 +129,7 @@ gameModel =
     { name = "ModelFlipBook"
     , path = "cranberry.model"
     , id = 300
-    , variables =
+    , constructorVariables =
         { integers =
             Just
                 [ { pName = "columns"
@@ -112,7 +156,7 @@ gameModel2 =
     { name = "ModelFlipBook22"
     , path = "cranberry.model"
     , id = 3340
-    , variables =
+    , constructorVariables =
         { integers =
             Just
                 [ { pName = "columns"
@@ -170,7 +214,7 @@ type alias GameObject =
     { name : String
     , path : String
     , id : Int
-    , variables : GameObjectAttributes
+    , constructorVariables : GameObjectAttributes
     , uniqueName : Maybe String
     , isActive : Bool
     , gameObjectType : GameObjectType
@@ -236,7 +280,8 @@ type alias GameSprite =
     { name : String
     , path : String
     , id : Int
-    , variables : GameObjectAttributes
+    , constructorVariables : GameObjectAttributes
+    , publicVariables : GameObjectAttributes
     , uniqueName : Maybe String
     , isActive : Bool
     , isExpanded : Bool
@@ -251,7 +296,7 @@ type alias GameModel =
     { name : String
     , path : String
     , id : Int
-    , variables : GameObjectAttributes
+    , constructorVariables : GameObjectAttributes
     , uniqueName : Maybe String
     , isActive : Bool
     , systems : List GameSystem
@@ -266,7 +311,7 @@ type alias GameSystem =
     { name : String
     , path : String
     , id : Int
-    , variables : GameObjectAttributes
+    , constructorVariables : GameObjectAttributes
     , uniqueName : Maybe String
     , isActive : Bool
     , models : RunningModels
@@ -278,7 +323,8 @@ createGameSprite nextID obj =
     { name = obj.name
     , path = obj.path
     , id = nextID
-    , variables = obj.variables
+    , constructorVariables = defaultContructorValues obj.constructorVariables
+    , publicVariables = defaultSpritePublicValues
     , uniqueName = obj.uniqueName
     , isActive = False
     , isExpanded = True
@@ -294,8 +340,142 @@ createGameModel nextID obj =
     { name = obj.name
     , path = obj.path
     , id = nextID
-    , variables = obj.variables
+    , constructorVariables = defaultContructorValues obj.constructorVariables
     , uniqueName = obj.uniqueName
     , isActive = False
     , systems = []
     }
+
+
+defaultSpritePublicValues : GameObjectAttributes
+defaultSpritePublicValues =
+    { integers = Nothing
+    , strings = Nothing
+    , floats =
+        Just
+            [ { pName = "x"
+              , pValue = Just 0
+              }
+            , { pName = "y"
+              , pValue = Just 0
+              }
+            , { pName = "anchorX"
+              , pValue = Just 0
+              }
+            , { pName = "anchorY"
+              , pValue = Just 0
+              }
+            , { pName = "scaleX"
+              , pValue = Just 1
+              }
+            , { pName = "scaleY"
+              , pValue = Just 1
+              }
+            , { pName = "rotation"
+              , pValue = Just 0
+              }
+            , { pName = "alpha"
+              , pValue = Just 1
+              }
+            ]
+    , booleans =
+        Just
+            [ { pName = "visible"
+              , pValue = Just True
+              }
+            ]
+    }
+
+
+defaultContructorValues : GameObjectAttributes -> GameObjectAttributes
+defaultContructorValues attrs =
+    let
+        integers =
+            case attrs.integers of
+                Nothing ->
+                    Nothing
+
+                Just ints ->
+                    Just (List.map defaultInt ints)
+
+        strings =
+            case attrs.strings of
+                Nothing ->
+                    Nothing
+
+                Just strs ->
+                    Just (List.map defaultString strs)
+
+        floats =
+            case attrs.floats of
+                Nothing ->
+                    Nothing
+
+                Just flts ->
+                    Just (List.map defaultFloat flts)
+
+        booleans =
+            case attrs.booleans of
+                Nothing ->
+                    Nothing
+
+                Just bools ->
+                    Just (List.map defaultBool bools)
+    in
+        (GameObjectAttributes integers strings floats booleans)
+
+
+defaultInt : FieldInteger -> FieldInteger
+defaultInt fieldInt =
+    case fieldInt.pValue of
+        Nothing ->
+            { fieldInt
+                | pValue = Just 0
+            }
+
+        Just val ->
+            { fieldInt
+                | pValue = Just val
+            }
+
+
+defaultString : FieldString -> FieldString
+defaultString fieldStr =
+    case fieldStr.pValue of
+        Nothing ->
+            { fieldStr
+                | pValue = Just ""
+            }
+
+        Just val ->
+            { fieldStr
+                | pValue = Just val
+            }
+
+
+defaultBool : FieldBool -> FieldBool
+defaultBool fieldBool =
+    case fieldBool.pValue of
+        Nothing ->
+            { fieldBool
+                | pValue = Just False
+            }
+
+        Just val ->
+            { fieldBool
+                | pValue = Just val
+            }
+
+
+defaultFloat : FieldFloat -> FieldFloat
+defaultFloat fieldFloat =
+    case fieldFloat.pValue of
+        Nothing ->
+            { fieldFloat
+                | pValue = Just 0.0
+            }
+
+        Just val ->
+            { fieldFloat
+                | pValue = Just val
+            }

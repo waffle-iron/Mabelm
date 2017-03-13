@@ -52,19 +52,28 @@ viewTree model =
 
 showSprite : List GameObject -> GameSprite -> Html Msg
 showSprite runningSystems spr =
-    div [ class "flex" ]
-        [ iconGeneric div ToggleVisiblilty spr (ifThen spr.isVisible visibility visibility_off)
-        , iconGeneric div ToggleLocked spr (ifThen spr.isLocked lock lock_open)
-        , div [ class (ClassState.classStateGameSprite "gameSprite" spr) ]
-            [ div [ class (ClassState.classStateGameSprite "gameSprite__header flex" spr) ]
-                [ iconGeneric div ToggleExpanded spr (ifThen spr.isExpanded expand_more chevron_right)
-                , p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr) ]
-                    [ text (spr.name ++ (toString spr.id)) ]
+    let
+        title =
+            case spr.uniqueName of
+                Nothing ->
+                    spr.name
+
+                Just val ->
+                    val
+    in
+        div [ class "flex" ]
+            [ iconGeneric div ToggleVisiblilty spr (ifThen spr.isVisible visibility visibility_off)
+            , iconGeneric div ToggleLocked spr (ifThen spr.isLocked lock lock_open)
+            , div [ class (ClassState.classStateGameSprite "gameSprite" spr) ]
+                [ div [ class (ClassState.classStateGameSprite "gameSprite__header flex" spr) ]
+                    [ iconGeneric div ToggleExpanded spr (ifThen spr.isExpanded expand_more chevron_right)
+                    , p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr) ]
+                        [ text title ]
+                    ]
+                , ifThen spr.isExpanded (showModels spr.models) (text "")
+                , ifThen spr.isExpanded (div [] (showSpriteChildren runningSystems spr.children)) (text "")
                 ]
-            , ifThen spr.isExpanded (showModels spr.models) (text "")
-            , ifThen spr.isExpanded (div [] (showSpriteChildren runningSystems spr.children)) (text "")
             ]
-        ]
 
 
 showSpriteChildren : List GameObject -> GameSpriteChildren -> List (Html Msg)

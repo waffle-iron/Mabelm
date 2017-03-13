@@ -70,11 +70,12 @@ heavySprite =
                 ]
         }
     , publicVariables = defaultSpritePublicValues
-    , uniqueName = Just "root"
+    , uniqueName = Just "heavyRoot"
     , isActive = True
     , isExpanded = True
     , isLocked = False
     , isVisible = True
+    , isEditingTitle = False
     , models = [ gameModel ]
     , children = (GameSpriteChildren [])
     }
@@ -92,11 +93,12 @@ rootSprite =
         , booleans = Nothing
         }
     , publicVariables = defaultSpritePublicValues
-    , uniqueName = Just "root"
+    , uniqueName = Just "asdasdsadasd"
     , isActive = False
     , isExpanded = True
     , isLocked = False
     , isVisible = True
+    , isEditingTitle = False
     , models = [ gameModel, gameModel2 ]
     , children = (GameSpriteChildren [ rootSprite2, heavySprite ])
     }
@@ -114,11 +116,12 @@ rootSprite2 =
         , booleans = Nothing
         }
     , publicVariables = defaultSpritePublicValues
-    , uniqueName = Just "root"
+    , uniqueName = Just "yeahBoi"
     , isActive = False
     , isExpanded = True
     , isLocked = False
     , isVisible = True
+    , isEditingTitle = False
     , models = [ gameModel2 ]
     , children = (GameSpriteChildren [])
     }
@@ -147,6 +150,7 @@ gameModel =
         }
     , uniqueName = Nothing
     , isActive = False
+    , isEditingTitle = False
     , systems = []
     }
 
@@ -174,6 +178,7 @@ gameModel2 =
         }
     , uniqueName = Nothing
     , isActive = False
+    , isEditingTitle = False
     , systems = []
     }
 
@@ -215,7 +220,6 @@ type alias GameObject =
     , path : String
     , id : Int
     , constructorVariables : GameObjectAttributes
-    , uniqueName : Maybe String
     , isActive : Bool
     , gameObjectType : GameObjectType
     }
@@ -287,6 +291,7 @@ type alias GameSprite =
     , isExpanded : Bool
     , isLocked : Bool
     , isVisible : Bool
+    , isEditingTitle : Bool
     , models : List GameModel
     , children : GameSpriteChildren
     }
@@ -299,6 +304,7 @@ type alias GameModel =
     , constructorVariables : GameObjectAttributes
     , uniqueName : Maybe String
     , isActive : Bool
+    , isEditingTitle : Bool
     , systems : List GameSystem
     }
 
@@ -314,6 +320,7 @@ type alias GameSystem =
     , constructorVariables : GameObjectAttributes
     , uniqueName : Maybe String
     , isActive : Bool
+    , isEditingTitle : Bool
     , models : RunningModels
     }
 
@@ -325,11 +332,12 @@ createGameSprite nextID obj =
     , id = nextID
     , constructorVariables = defaultContructorValues obj.constructorVariables
     , publicVariables = defaultSpritePublicValues
-    , uniqueName = obj.uniqueName
+    , uniqueName = Nothing
     , isActive = False
     , isExpanded = True
     , isLocked = False
     , isVisible = True
+    , isEditingTitle = False
     , models = []
     , children = (GameSpriteChildren [])
     }
@@ -341,8 +349,9 @@ createGameModel nextID obj =
     , path = obj.path
     , id = nextID
     , constructorVariables = defaultContructorValues obj.constructorVariables
-    , uniqueName = obj.uniqueName
+    , uniqueName = Nothing
     , isActive = False
+    , isEditingTitle = False
     , systems = []
     }
 

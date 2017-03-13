@@ -25,32 +25,35 @@ import Model exposing (..)
 classStateGameSprite : String -> GameSprite -> String
 classStateGameSprite baseClass spr =
     baseClass
-        |> addState spr.isActive " isActive"
-        |> addState spr.isExpanded " isExpanded"
-        |> addState spr.isLocked " isLocked"
-        |> addState spr.isVisible " isVisible"
+        |> addState spr.isEditingTitle "isEditingTitle"
+        |> addState spr.isActive "isActive"
+        |> addState spr.isExpanded "isExpanded"
+        |> addState spr.isLocked "isLocked"
+        |> addState spr.isVisible "isVisible"
 
 
 classStateGameModel : String -> GameModel -> String
 classStateGameModel baseClass model =
     baseClass
-        |> addState model.isActive " isActive"
+        |> addState model.isEditingTitle "isEditingTitle"
+        |> addState model.isActive "isActive"
 
 
 classStateGameSystem : String -> GameSystem -> String
 classStateGameSystem baseClass system =
     baseClass
-        |> addState system.isActive " isActive"
+        |> addState system.isEditingTitle "isEditingTitle"
+        |> addState system.isActive "isActive"
 
 
 classStateModel : String -> Model -> String
 classStateModel baseClass spr =
     baseClass
-        |> addState spr.isCompiling " isCompiling"
-        |> addState spr.isRendering " isRendering"
-        |> addState spr.isUpdating " isUpdating"
-        |> addState spr.showsAvailableObjects " showsAvailableObjects"
-        |> addState spr.showsRunningSystems " showsRunningSystems"
+        |> addState spr.isCompiling "isCompiling"
+        |> addState spr.isRendering "isRendering"
+        |> addState spr.isUpdating "isUpdating"
+        |> addState spr.showsAvailableObjects "showsAvailableObjects"
+        |> addState spr.showsRunningSystems "showsRunningSystems"
 
 
 addState : Bool -> String -> String -> String

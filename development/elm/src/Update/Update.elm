@@ -456,8 +456,32 @@ update msg model =
                             , Cmd.none
                             )
 
-        EditTitle spr ->
-            ( model, Cmd.none )
+        EditTitle spr isEditing ->
+            let
+                nRoot =
+                    DataUpdater.updateByID spr.id (updateIsEditingTitle isEditing) model.root
+            in
+                ( { model
+                    | root = nRoot
+                    , activeSprite = updateActiveSpr model.activeSprite nRoot
+                  }
+                , Cmd.none
+                )
+
+        SaveTitle spr str ->
+            let
+                x =
+                    Debug.log ("save") ()
+
+                nRoot =
+                    (DataUpdater.updateByID spr.id (updateUniqueName str) model.root)
+            in
+                ( { model
+                    | root = nRoot
+                    , activeSprite = updateActiveSpr model.activeSprite nRoot
+                  }
+                , Cmd.none
+                )
 
 
 updateIsVisible : Bool -> GameSprite -> GameSprite
@@ -470,6 +494,11 @@ updateIsExpanded isExpanded gameSpr =
     { gameSpr | isExpanded = isExpanded }
 
 
+updateIsEditingTitle : Bool -> GameSprite -> GameSprite
+updateIsEditingTitle isEditingTitle gameSpr =
+    { gameSpr | isEditingTitle = isEditingTitle }
+
+
 updateIsActive : Bool -> GameSprite -> GameSprite
 updateIsActive isActive gameSpr =
     { gameSpr | isActive = isActive }
@@ -478,6 +507,11 @@ updateIsActive isActive gameSpr =
 updateIsLocked : Bool -> GameSprite -> GameSprite
 updateIsLocked isLocked gameSpr =
     { gameSpr | isLocked = isLocked }
+
+
+updateUniqueName : String -> GameSprite -> GameSprite
+updateUniqueName str gameSpr =
+    { gameSpr | uniqueName = Just str }
 
 
 updateModels : List GameModel -> GameSprite -> GameSprite

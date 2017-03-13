@@ -25,7 +25,9 @@ import Messages exposing (Msg(..))
 import Model exposing (..)
 import String.Extra as StringExtra
 import Material.Icons.Content exposing (create)
+import Material.Icons.Navigation exposing (check)
 import Color as Color
+import Html.Events exposing (onClick, onInput)
 
 
 viewActiveItem : Model -> Html Msg
@@ -41,20 +43,42 @@ viewActiveItem model =
 
 
 displayGameObject : GameSprite -> Html Msg
-displayGameObject obj =
+displayGameObject spr =
     div [ class "gameObject" ]
-        [ h2 [ class "disableUserSelect m0 inline-block" ] [ text obj.name ]
-        , div [ class "inline-block pl1" ] [ (create (Color.rgb 100 100 100) 20) ]
-        , if obj.isActive then
+        [ displayTitle spr
+        , if spr.isActive then
             div []
-                [ displayFieldList obj.constructorVariables.strings (displayFieldString obj)
-                , displayFieldList obj.constructorVariables.integers (displayFieldInteger obj)
-                , displayFieldList obj.constructorVariables.floats (displayFieldFloat obj)
-                , displayFieldList obj.constructorVariables.booleans (displayFieldBoolean obj)
+                [ displayFieldList spr.constructorVariables.strings (displayFieldString spr)
+                , displayFieldList spr.constructorVariables.integers (displayFieldInteger spr)
+                , displayFieldList spr.constructorVariables.floats (displayFieldFloat spr)
+                , displayFieldList spr.constructorVariables.booleans (displayFieldBoolean spr)
                 ]
           else
             text ""
         ]
+
+
+displayTitle : GameSprite -> Html Msg
+displayTitle spr =
+    let
+        title =
+            case spr.uniqueName of
+                Nothing ->
+                    spr.name
+
+                Just val ->
+                    val
+    in
+        if spr.isEditingTitle then
+            div []
+                [ input [ class "col col-7", value title, onInput (SaveTitle spr) ] []
+                , div [ class "inline-block pl1", onClick (EditTitle spr False) ] [ (check (Color.rgb 100 100 100) 20) ]
+                ]
+        else
+            div []
+                [ h2 [ class "disableUserSelect m0 inline-block" ] [ text title ]
+                , div [ class "inline-block pl1", onClick (EditTitle spr True) ] [ (create (Color.rgb 100 100 100) 20) ]
+                ]
 
 
 displayFieldList : Maybe (List a) -> (a -> Html Msg) -> Html Msg

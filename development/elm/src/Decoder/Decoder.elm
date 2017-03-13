@@ -84,12 +84,11 @@ gamePackageDecoder =
 
 gameObjectDecoder : Decode.Decoder GameObject
 gameObjectDecoder =
-    Decode.map7 GameObject
+    Decode.map6 GameObject
         (Decode.field "name" Decode.string)
         (Decode.field "path" Decode.string)
         (Decode.field "id" Decode.int)
         (Decode.field "constructorVariables" gameObjectAttrDecoder)
-        (Decode.field "uniqueName" (Decode.nullable Decode.string))
         (Decode.oneOf [ Decode.field "isActive" Decode.bool, Decode.succeed True ])
         (Decode.field "type" (Decode.string |> Decode.andThen gameObjectTypeDecoder))
 

@@ -24,6 +24,8 @@ import Html.Attributes exposing (id, class, type_, checked, value)
 import Messages exposing (Msg(..))
 import Model exposing (..)
 import String.Extra as StringExtra
+import Material.Icons.Content exposing (create)
+import Color as Color
 
 
 viewActiveItem : Model -> Html Msg
@@ -41,7 +43,8 @@ viewActiveItem model =
 displayGameObject : GameSprite -> Html Msg
 displayGameObject obj =
     div [ class "gameObject" ]
-        [ h2 [ class "disableUserSelect m0" ] [ text obj.name ]
+        [ h2 [ class "disableUserSelect m0 inline-block" ] [ text obj.name ]
+        , div [ class "inline-block pl1" ] [ (create (Color.rgb 100 100 100) 20) ]
         , if obj.isActive then
             div []
                 [ displayFieldList obj.constructorVariables.strings (displayFieldString obj)

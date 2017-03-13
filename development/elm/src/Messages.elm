@@ -52,3 +52,4 @@ type Msg
     | ToggleExpanded GameSprite
     | ToggleModel GameSprite GameModel
     | DeleteSprite GameSprite
+    | EditTitle GameSprite

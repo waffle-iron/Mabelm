@@ -456,6 +456,9 @@ update msg model =
                             , Cmd.none
                             )
 
+        EditTitle spr ->
+            ( model, Cmd.none )
+
 
 updateIsVisible : Bool -> GameSprite -> GameSprite
 updateIsVisible isVisible gameSpr =

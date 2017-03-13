@@ -46,9 +46,3 @@ view model =
         , viewTree model
         , viewTreeBar model
         ]
-
-
-viewActiveGameSprite : GameSprite -> Html Msg
-viewActiveGameSprite gameSprite =
-    span []
-        [ text gameSprite.name ]

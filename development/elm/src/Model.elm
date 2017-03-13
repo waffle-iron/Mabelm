@@ -54,20 +54,78 @@ rootSprite =
     , isExpanded = True
     , isLocked = False
     , isVisible = True
-    , models = [ gameModel ]
+    , models = [ gameModel, gameModel2 ]
+    , children = (GameSpriteChildren [ rootSprite2 ])
+    }
+
+
+rootSprite2 : GameSprite
+rootSprite2 =
+    { name = "Sprite"
+    , path = "cranberry.sprite"
+    , id = 2938
+    , variables =
+        { integers = Nothing
+        , strings = Nothing
+        , floats = Nothing
+        , booleans = Nothing
+        }
+    , uniqueName = Just "root"
+    , isActive = False
+    , isExpanded = True
+    , isLocked = False
+    , isVisible = True
+    , models = [ gameModel2 ]
     , children = (GameSpriteChildren [])
     }
 
 
 gameModel : GameModel
 gameModel =
-    { name = "yeah"
-    , path = "yeah.ham.gross"
+    { name = "ModelFlipBook"
+    , path = "cranberry.model"
     , id = 300
     , variables =
-        { integers = Nothing
+        { integers =
+            Just
+                [ { pName = "columns"
+                  , pValue = Just 2
+                  }
+                ]
         , strings = Nothing
-        , floats = Nothing
+        , floats =
+            Just
+                [ { pName = "speed"
+                  , pValue = Just 273.34
+                  }
+                ]
+        , booleans = Nothing
+        }
+    , uniqueName = Nothing
+    , isActive = False
+    , systems = []
+    }
+
+
+gameModel2 : GameModel
+gameModel2 =
+    { name = "ModelFlipBook22"
+    , path = "cranberry.model"
+    , id = 3340
+    , variables =
+        { integers =
+            Just
+                [ { pName = "columns"
+                  , pValue = Just 23
+                  }
+                ]
+        , strings = Nothing
+        , floats =
+            Just
+                [ { pName = "speed"
+                  , pValue = Just 353.3474
+                  }
+                ]
         , booleans = Nothing
         }
     , uniqueName = Nothing

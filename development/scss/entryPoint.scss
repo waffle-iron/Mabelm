@@ -40,13 +40,16 @@ body, html {
 	color: #555;
 }
 
+.itemcenter {
+	align-self: center;
+}
+
 .toolbar {
 	top: 0;
 	left: 0;
 	position: absolute;
 	width: $toolbarWidth;
 	height: 100vh;
-	box-shadow: $boxShadow;
 	z-index: 2;
 }
 
@@ -67,23 +70,13 @@ body, html {
 	width: $gameTree__width;
 	height: calc(100vh - #{$gameTreeFooter__height});
 	z-index: 2;
-	box-shadow: $boxShadow;
 	overflow: auto;
+}
 
-
-	// table, th, td {
-	// 	border: 1px solid black;
-	// 	padding: 0px;
-	// 	margin: 0px;
-	// 	vertical-align: top;
-	// }
-
-	// table {
-	// 	min-width: $gameTree__width - 2px;
-	// 	border: 1px solid #ccc;
-	// 	border-collapse: collapse;
-	// 	table-layout: fixed;
-	// }
+.gameSprite {
+	// align-items: center;
+	// display: flex;
+    // justify-content: center;
 }
 
 
@@ -94,7 +87,6 @@ body, html {
 	width: $gameTree__width;
 	height: $gameTreeFooter__height;
 	z-index: 2;
-	box-shadow: $boxShadow;
 }
 
 #gamePackageContainers {
@@ -104,7 +96,6 @@ body, html {
 	width: 300px;
 	height: 100vh;
 	z-index: 2;
-	box-shadow: $boxShadow;
 	overflow: auto;
 }
 

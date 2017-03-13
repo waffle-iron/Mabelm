@@ -25,6 +25,9 @@ import Html.Events exposing (onClick, onInput)
 import String.Extra as StringExtra
 import Messages exposing (Msg(..))
 import Model exposing (..)
+import Material.Icons.Navigation exposing (chevron_right, expand_more)
+import Color as Color
+import Util.Util exposing (ifThen)
 
 
 viewAvailableObjects : Model -> Html Msg
@@ -56,7 +59,8 @@ displayGamePackage title buttonText funcShow msg maybeGroupPackage =
 
         Just group ->
             div []
-                [ h3 [ onClick (TogglePackageGroup group), class "disableUserSelect" ] [ text title ]
+                [ div [ onClick (TogglePackageGroup group), class "inline-block" ] [ (ifThen group.isVisible expand_more chevron_right) (Color.rgb 100 100 100) 20 ]
+                , h3 [ class "disableUserSelect inline-block" ] [ text title ]
                 , if group.isVisible then
                     div [] (List.map (displayListOfGameObjects buttonText funcShow msg) group.packages)
                   else

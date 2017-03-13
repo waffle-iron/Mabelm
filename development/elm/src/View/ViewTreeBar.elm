@@ -17,30 +17,33 @@
 -}
 
 
-module View.View exposing (..)
+module View.ViewTreeBar exposing (viewTreeBar)
 
 import Html exposing (Html, Attribute, div, h2, p, h5, span, text, button, select, option)
 import Html.Attributes exposing (id, class)
 import Messages exposing (Msg(..))
 import Model exposing (..)
-import View.Toolbar.ViewToolbar as ViewToolbar
-import View.Toolbar.ViewAvailableObjects exposing (viewAvailableObjects)
-import View.Toolbar.ViewActiveSystems exposing (viewActiveSystems)
-import View.GameWindow.ViewGameWindow exposing (gameWindow)
+import Html.Events exposing (onClick)
 import Html.Attributes exposing (style)
-import View.ViewTree exposing (viewTree)
-import View.ViewTreeBar exposing (viewTreeBar)
+import Material.Icons.Action exposing (lock, lock_open, visibility, visibility_off, delete)
+import Color as Color
 
 
-view : Model -> Html Msg
-view model =
-    div []
-        [ ViewToolbar.toolbar model
-        , gameWindow model
-        , div [ id "gamePackageContainers", class "" ]
-            [ viewActiveSystems model
-            , viewAvailableObjects model
-            ]
-        , viewTree model
-        , viewTreeBar model
+viewTreeBar : Model -> Html Msg
+viewTreeBar model =
+    div [ id "gameTreeFooter", class "border" ]
+        [ viewButtonBar model.activeSprite model.root.id
         ]
+
+
+viewButtonBar : Maybe GameSprite -> Int -> Html Msg
+viewButtonBar maybeSpr rootID =
+    case maybeSpr of
+        Nothing ->
+            div [ class "ml1" ] [ delete (Color.rgb 150 150 150) 20 ]
+
+        Just spr ->
+            if spr.id == rootID then
+                div [ class "ml1" ] [ delete (Color.rgb 150 150 150) 20 ]
+            else
+                div [ class "ml1", onClick (DeleteSprite spr) ] [ delete (Color.rgb 100 100 100) 20 ]

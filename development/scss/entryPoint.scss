@@ -31,11 +31,7 @@ $gameTree__width: 300px;
 
 $gameTreeFooter__height: 30px;
 
-tr, td, table {
-	border: 1px solid #ccc;
-	padding: 0px;
-	margin: 0px;
-}
+
 
 body, html {
 	width: 100vw;
@@ -73,7 +69,23 @@ body, html {
 	z-index: 2;
 	box-shadow: $boxShadow;
 	overflow: auto;
+
+
+	// table, th, td {
+	// 	border: 1px solid black;
+	// 	padding: 0px;
+	// 	margin: 0px;
+	// 	vertical-align: top;
+	// }
+
+	// table {
+	// 	min-width: $gameTree__width - 2px;
+	// 	border: 1px solid #ccc;
+	// 	border-collapse: collapse;
+	// 	table-layout: fixed;
+	// }
 }
+
 
 #gameTreeFooter {
 	top: calc(100vh - #{$gameTreeFooter__height});
@@ -148,10 +160,16 @@ body, html {
 	-webkit-user-select: none;
 }
 
-.sprIsActive {
-	background-color: #ccc;
+
+.gameSprite {
+	&.isActive {
+		background-color: #eee;
+	}
 }
 
-.isActive {
-	background-color: #aaa;
+.gameSprite__header {
+	&.isActive {
+		background-color: #aaa;
+	}
 }
+	

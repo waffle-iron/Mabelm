@@ -41,6 +41,10 @@ type alias MaterialIcon =
     Color.Color -> Int -> Svg Msg
 
 
+type alias Elem =
+    List (Attribute Msg) -> List (Html Msg) -> Html Msg
+
+
 view : Model -> Html Msg
 view model =
     div []
@@ -51,10 +55,8 @@ view model =
             , viewAvailableObjects model
             ]
         , div [ id "gameTree", class "border-left border-right border-top" ]
-            [ h2 [ class "m0 disableUserSelect" ]
-                [ text "GameTree" ]
-            , div []
-                [ showSprite 0 model.runningSystems model.root
+            [ div []
+                [ showSprite model.runningSystems model.root
                 ]
             ]
         , div [ id "gameTreeFooter", class "border" ]
@@ -63,38 +65,44 @@ view model =
         ]
 
 
-showSprite : Int -> List GameObject -> GameSprite -> Html Msg
-showSprite level runningSystems spr =
-    showSpriteExpanded level runningSystems spr
-
-
-showSpriteExpanded : Int -> List GameObject -> GameSprite -> Html Msg
-showSpriteExpanded level runningSystems spr =
-    div []
-        [ div []
-            [ iconGeneric ToggleVisiblilty spr (ifThen spr.isVisible visibility visibility_off)
-            , iconGeneric ToggleLocked spr (ifThen spr.isLocked lock lock_open)
-            , div [ class (ClassState.classStateGameSprite "inline-block" spr) ]
-                [ iconGeneric ToggleExpanded spr (ifThen spr.isExpanded expand_more chevron_right)
+showSprite : List GameObject -> GameSprite -> Html Msg
+showSprite runningSystems spr =
+    div [ class "flex" ]
+        [ iconGeneric div ToggleVisiblilty spr (ifThen spr.isVisible visibility visibility_off)
+        , iconGeneric div ToggleLocked spr (ifThen spr.isLocked lock lock_open)
+        , div [ class (ClassState.classStateGameSprite "gameSprite" spr) ]
+            [ div [ class (ClassState.classStateGameSprite "gameSprite__header flex" spr) ]
+                [ iconGeneric div ToggleExpanded spr (ifThen spr.isExpanded expand_more chevron_right)
                 , p [ class ("m0 disableUserSelect"), onClick (ClickTreeSprite spr) ]
                     [ text (spr.name ++ (toString spr.id)) ]
                 ]
-            , div []
-                (showSpriteChildren level runningSystems spr.children)
+            , ifThen spr.isExpanded (showModels spr.models) (text "")
+            , ifThen spr.isExpanded (div [] (showSpriteChildren runningSystems spr.children)) (text "")
             ]
         ]
 
 
-showSpriteChildren : Int -> List GameObject -> GameSpriteChildren -> List (Html Msg)
-showSpriteChildren level runningSystems (GameSpriteChildren children) =
-    (List.map (showSprite (level + 1) runningSystems) children)
+showSpriteChildren : List GameObject -> GameSpriteChildren -> List (Html Msg)
+showSpriteChildren runningSystems (GameSpriteChildren children) =
+    (List.map (showSprite runningSystems) children)
 
 
-iconGeneric : (GameSprite -> Msg) -> GameSprite -> MaterialIcon -> Html Msg
-iconGeneric msg spr icon =
-    div [ onClick (msg spr) ]
+iconGeneric : Elem -> (GameSprite -> Msg) -> GameSprite -> MaterialIcon -> Html Msg
+iconGeneric elem msg spr icon =
+    elem [ onClick (msg spr) ]
         [ icon (Color.rgb 100 100 100) 20
         ]
+
+
+showModels : List GameModel -> Html Msg
+showModels models =
+    div []
+        (List.map showModel models)
+
+
+showModel : GameModel -> Html Msg
+showModel model =
+    text model.name
 
 
 viewButtonBar : Maybe GameSprite -> Int -> Html Msg

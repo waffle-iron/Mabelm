@@ -49,9 +49,6 @@ toolbar model =
         updateButton =
             ifThen model.isUpdating stop play_arrow
 
-        buildButton =
-            ifThen model.isCompiling autorenew autorenew
-
         baseClass =
             ClassState.classStateModel "toolbar__button" model
     in

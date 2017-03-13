@@ -23,10 +23,10 @@ import Html exposing (Html, Attribute, div, h2, p, h5, span, text, button, selec
 import Html.Attributes exposing (id, class)
 import Messages exposing (Msg(..))
 import Model exposing (..)
-import View.Toolbar.ViewToolbar as ViewToolbar
-import View.Toolbar.ViewAvailableObjects exposing (viewAvailableObjects)
-import View.Toolbar.ViewActiveSystems exposing (viewActiveSystems)
-import View.GameWindow.ViewGameWindow exposing (gameWindow)
+import View.ViewToolbar as ViewToolbar
+import View.ViewAvailableObjects exposing (viewAvailableObjects)
+import View.ViewActiveSystems exposing (viewActiveSystems)
+import View.ViewGameWindow exposing (gameWindow)
 import Html.Attributes exposing (style)
 import View.ViewTree exposing (viewTree)
 import View.ViewTreeBar exposing (viewTreeBar)

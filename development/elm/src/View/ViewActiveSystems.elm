@@ -17,7 +17,7 @@
 -}
 
 
-module View.Toolbar.ViewActiveSystems exposing (viewActiveSystems)
+module View.ViewActiveSystems exposing (viewActiveSystems)
 
 import Html exposing (Html, div, h2, h5, text)
 import Html.Attributes exposing (id, class)

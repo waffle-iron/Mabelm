@@ -17,7 +17,7 @@
 -}
 
 
-module View.GameWindow.ViewGameWindow exposing (gameWindow)
+module View.ViewGameWindow exposing (gameWindow)
 
 import Html exposing (Html, text, div, ul, li, span)
 import Html.Attributes exposing (class, id)

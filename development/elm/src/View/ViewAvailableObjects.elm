@@ -17,7 +17,7 @@
 -}
 
 
-module View.Toolbar.ViewAvailableObjects exposing (..)
+module View.ViewAvailableObjects exposing (..)
 
 import Html exposing (Html, div, h2, h3, h4, h5, text, p, input, button)
 import Html.Attributes exposing (id, class, type_, checked, value)

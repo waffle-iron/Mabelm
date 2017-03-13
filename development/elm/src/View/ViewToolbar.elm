@@ -17,7 +17,7 @@
 -}
 
 
-module View.Toolbar.ViewToolbar exposing (toolbar)
+module View.ViewToolbar exposing (toolbar)
 
 import Html exposing (Html, text, div, ul, li, span)
 import Html.Attributes exposing (class, id)
